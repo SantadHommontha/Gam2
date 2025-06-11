@@ -88,44 +88,7 @@ public class GameManager : MonoBehaviour
         UpdateState();
     }
 
-    private void TakeBvall()
-    {
-        BallDataWapper ballDataWapper = new BallDataWapper();
-        ballDataWapper.playerSendIndex = playerIndex;
-        ballDataWapper.nextPLayerIndex = playerIndex + 1;
-        ballDataWapper.xPosition = ball.transform.position.x;
-        ballDataWapper.yPosition = ball.transform.position.y;
-        ballDataWapper.xVelocity = ball.rb.linearVelocityX;
-        ballDataWapper.yVelocity = ball.rb.linearVelocityY;
-
-        string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-        Debug.Log("Send Ball");
-        ball.gameObject.SetActive(false);
-        isSend = true;
-        photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
-    }
-
-    [PunRPC]
-    private void RPC_TakeBall(string _BallDataJson)
-    {
-         Debug.Log("Recive Ball");
-        BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
-        if (ballDataWapper.nextPLayerIndex == playerIndex)
-        {
-            ball.gameObject.SetActive(true);
-            ball.transform.position = new Vector3(ballDataWapper.xPosition, -1.5f, 0);
-            ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-        }
-
-    }
-
-    private bool BallOnScreen()
-    {
-        if (ball.gameObject.transform.position.y >= maxHeightScreen)
-            return true;
-
-        return false;
-    }
+    
     public void SetPlayerIndex()
     {
         playerIndex = int.Parse(tMP_InputField.text);

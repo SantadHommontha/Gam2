@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using Mono.Cecil.Cil;
 
 public class BallDataWapper
 {
@@ -13,7 +14,7 @@ public class BallDataWapper
 }
 
 
-public class Ball : MonoBehaviour
+public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 {
     [Header("Public")]
     [SerializeField] private float maxForce = 10;
@@ -38,11 +39,11 @@ public class Ball : MonoBehaviour
 
     private bool isDragging = false;
     private int touchId = -1;
-  //  private Ball ball;
+    //  private Ball ball;
 
     public Vector2 DragDirection => dragDirection;
     public Vector2 OppositeDirection => oppositeDirection;
-
+    public string ballID;
     private PhotonView photonView;
 
     void Awake()
@@ -73,7 +74,7 @@ public class Ball : MonoBehaviour
         if (BallOnScreen())
         {
             Debug.Log("FFFF");
-            TakeBvall();
+            // TakeBvall();
         }
 
     }
@@ -94,24 +95,24 @@ public class Ball : MonoBehaviour
             // วนลูปผ่าน Touch ทั้งหมดที่กำลังใช้งานอยู่
             foreach (Touch touch in Input.touches)
             {
-              
+
                 if (!isDragging && touch.phase == TouchPhase.Began)
                 {
-                
-                    Vector2 touchWorldPos = Camera.main.ScreenToWorldPoint(touch.position);
-                    RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector2.zero); 
 
-                   
+                    Vector2 touchWorldPos = Camera.main.ScreenToWorldPoint(touch.position);
+                    RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector2.zero);
+
+
                     if (hit.collider != null && hit.collider.gameObject == gameObject)
                     {
                         isDragging = true;
                         touchId = touch.fingerId;
                         startTouchPosition = touchWorldPos;
                         Debug.Log("Touch Began on Sprite at: " + startTouchPosition);
-                        break; 
+                        break;
                     }
                 }
-            
+
                 else if (isDragging && touch.fingerId == touchId && touch.phase == TouchPhase.Moved)
                 {
                     currentTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
@@ -122,14 +123,14 @@ public class Ball : MonoBehaviour
                     Debug.Log("Drag Direction: " + dragDirection);
                     Debug.Log("Opposite Direction: " + oppositeDirection);
 
-                   
+
                 }
-              
+
                 else if (isDragging && touch.fingerId == touchId && (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled))
                 {
                     Debug.Log("Touch Ended. Final Opposite Direction: " + oppositeDirection);
                     isDragging = false;
-                    touchId = -1; 
+                    touchId = -1;
                     dragDirection = Vector2.zero;
                     oppositeDirection = Vector2.zero;
                     break;
@@ -192,11 +193,11 @@ public class Ball : MonoBehaviour
 
 
 
-    private void TakeBvall()
+    private void TakeBvall(bool _up)
     {
         BallDataWapper ballDataWapper = new BallDataWapper();
         ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
-        ballDataWapper.nextPLayerIndex = GameManager.Instance.playerIndex + 1;
+        ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
         ballDataWapper.xPosition = transform.position.x;
         ballDataWapper.yPosition = transform.position.y;
         ballDataWapper.xVelocity = rb.linearVelocityX;
@@ -234,5 +235,29 @@ public class Ball : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<PassWay>(out var way))
+        {
+            if (way.up)
+            {
+                TakeBvall(true);
+            }
+            else
+            {
+                TakeBvall(false);
+            }
+        }
+    }
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)
+        {
+            string id = (string)info.photonView.InstantiationData[0];
+            ballID = id;
+        }
     }
 }

@@ -8,6 +8,7 @@ public class SpawnBall : MonoBehaviour
     [SerializeField] private Transform spawnPosition;
     private PhotonView photonView;
     private bool isSpawn = false;
+    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -33,8 +34,9 @@ public class SpawnBall : MonoBehaviour
     }
     public void Spawn()
     {
-
-        var ball = PhotonNetwork.Instantiate(prefap.name, spawnPosition.position, Quaternion.identity);
+        object[] data = new object[] { GenerateCode.GenerateRandomCode(8) };
+         
+        var ball = PhotonNetwork.Instantiate(prefap.name, spawnPosition.position, Quaternion.identity,0,data);
         // GameManager.Instance.ball = ball.GetComponentInChildren<Ball>();
        // photonView.RPC("RPC_SpawnOther", RpcTarget.Others);
     }
