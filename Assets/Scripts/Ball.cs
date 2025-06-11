@@ -1,11 +1,25 @@
 using UnityEngine;
+using Photon.Pun;
+
+public class BallDataWapper
+{
+    public int playerSendIndex;
+    public int nextPLayerIndex;
+    public float xPosition;
+    public float yPosition;
+    public float xVelocity;
+    public float yVelocity;
+    public string ballID;
+}
+
 
 public class Ball : MonoBehaviour
 {
     [Header("Public")]
     [SerializeField] private float maxForce = 10;
-   
-    private Rigidbody2D rb;
+    [SerializeField] private float maxHeightScreen = 8.2f;
+
+    public Rigidbody2D rb;
     public Transform TARGET;
     [SerializeField] private bool isClick = false;
     [SerializeField] private bool shot = false;
@@ -24,18 +38,21 @@ public class Ball : MonoBehaviour
 
     private bool isDragging = false;
     private int touchId = -1;
-    private Ball ball;
+  //  private Ball ball;
 
     public Vector2 DragDirection => dragDirection;
     public Vector2 OppositeDirection => oppositeDirection;
 
+    private PhotonView photonView;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        photonView = GetComponent<PhotonView>();
     }
     void Start()
     {
-
+        GameManager.Instance.ball = this;
     }
 
     // Update is called once per frame
@@ -51,6 +68,12 @@ public class Ball : MonoBehaviour
         {
             shot = true;
             isClick = false;
+        }
+
+        if (BallOnScreen())
+        {
+            Debug.Log("FFFF");
+            TakeBvall();
         }
 
     }
@@ -71,24 +94,24 @@ public class Ball : MonoBehaviour
             // วนลูปผ่าน Touch ทั้งหมดที่กำลังใช้งานอยู่
             foreach (Touch touch in Input.touches)
             {
-                // ถ้ายังไม่ได้เริ่มลาก และ Touch นี้เพิ่งเริ่มต้น
+              
                 if (!isDragging && touch.phase == TouchPhase.Began)
                 {
-                    // สร้าง Ray จากตำแหน่ง Touch
+                
                     Vector2 touchWorldPos = Camera.main.ScreenToWorldPoint(touch.position);
-                    RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector2.zero); // ยิง Ray จากจุดเดียว
+                    RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector2.zero); 
 
-                    // ตรวจสอบว่า Ray โดน Collider ของ Sprite นี้หรือไม่
+                   
                     if (hit.collider != null && hit.collider.gameObject == gameObject)
                     {
                         isDragging = true;
-                        touchId = touch.fingerId; // บันทึก ID ของนิ้วที่แตะ
+                        touchId = touch.fingerId;
                         startTouchPosition = touchWorldPos;
                         Debug.Log("Touch Began on Sprite at: " + startTouchPosition);
-                        break; // ออกจากลูปเมื่อพบ Touch ที่เกี่ยวข้อง
+                        break; 
                     }
                 }
-                // ถ้ากำลังลาก และ Touch นี้คือ Touch ที่เรากำลังติดตาม และกำลังเคลื่อนที่
+            
                 else if (isDragging && touch.fingerId == touchId && touch.phase == TouchPhase.Moved)
                 {
                     currentTouchPosition = Camera.main.ScreenToWorldPoint(touch.position);
@@ -99,19 +122,17 @@ public class Ball : MonoBehaviour
                     Debug.Log("Drag Direction: " + dragDirection);
                     Debug.Log("Opposite Direction: " + oppositeDirection);
 
-                    // คุณสามารถนำ oppositeDirection ไปใช้กับ GameObject อื่นๆ ได้ที่นี่
-                    // เช่น:
-                    // transform.position += (Vector3)oppositeDirection * Time.deltaTime * speed;
+                   
                 }
-                // ถ้ากำลังลาก และ Touch นี้คือ Touch ที่เรากำลังติดตาม และยกนิ้วออก
+              
                 else if (isDragging && touch.fingerId == touchId && (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled))
                 {
                     Debug.Log("Touch Ended. Final Opposite Direction: " + oppositeDirection);
                     isDragging = false;
-                    touchId = -1; // รีเซ็ต ID
+                    touchId = -1; 
                     dragDirection = Vector2.zero;
                     oppositeDirection = Vector2.zero;
-                    break; // ออกจากลูป
+                    break;
                 }
             }
         }
@@ -154,13 +175,64 @@ public class Ball : MonoBehaviour
         this.oppositeDirection = oppositeDirection;
 
         float distance = UnityEngine.Mathf.Clamp01(vectorToMouse.magnitude);
-      
+
         this.force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
-       
+
         TARGET.position = transform.position + oppositeDirection;
     }
     void OnMouseDown()
     {
         isClick = true;
+    }
+
+
+
+
+
+
+
+
+    private void TakeBvall()
+    {
+        BallDataWapper ballDataWapper = new BallDataWapper();
+        ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
+        ballDataWapper.nextPLayerIndex = GameManager.Instance.playerIndex + 1;
+        ballDataWapper.xPosition = transform.position.x;
+        ballDataWapper.yPosition = transform.position.y;
+        ballDataWapper.xVelocity = rb.linearVelocityX;
+        ballDataWapper.yVelocity = rb.linearVelocityY;
+
+        string ballDataJson = JsonUtility.ToJson(ballDataWapper);
+        Debug.Log("Send Ball");
+        gameObject.SetActive(false);
+
+        photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
+    }
+
+    [PunRPC]
+    private void RPC_TakeBall(string _BallDataJson)
+    {
+        Debug.Log("Recive Ball");
+        BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
+        if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
+        {
+
+            gameObject.SetActive(true);
+            transform.position = new Vector3(ballDataWapper.xPosition, -1.5f, 0);
+            rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
+        }
+
+    }
+
+
+
+
+
+    private bool BallOnScreen()
+    {
+        if (transform.position.y >= maxHeightScreen)
+            return true;
+
+        return false;
     }
 }
