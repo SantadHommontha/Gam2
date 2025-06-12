@@ -1,5 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class SendBackJoinTeam
@@ -11,8 +13,17 @@ public class SendBackJoinTeam
 public class TeamManager : MonoBehaviour
 {
     public static TeamManager Instance;
+    public Action<SendBackJoinTeam> ac_sendBackJoinTeam;
     private PhotonView photonView;
     private Team team = new Team();
+
+
+
+
+
+    [Header("Value")]
+    [Space]
+    [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
 
     void Awake()
     {
@@ -26,7 +37,7 @@ public class TeamManager : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        //  DontDestroyOnLoad(this.gameObject);
     }
 
     public void JoinTeam(PlayerData _playerData)
@@ -47,9 +58,9 @@ public class TeamManager : MonoBehaviour
         {
             var ap = team.GetAllPlayer();
 
-            sendBackJoinTeam.status = false;
-            sendBackJoinTeam.massage = "Can't Join Team";
-            sendBackJoinTeam.playerIndex = ap.Count + 1;
+            sendBackJoinTeam.status = true;
+            sendBackJoinTeam.massage = "Join Team";
+            sendBackJoinTeam.playerIndex = ap.Count ;
 
         }
         else
@@ -68,7 +79,15 @@ public class TeamManager : MonoBehaviour
     {
         SendBackJoinTeam sendBackJoinTeam = JsonUtility.FromJson<SendBackJoinTeam>(_statusJson);
 
-        GameManager.Instance.playerIndex = sendBackJoinTeam.playerIndex;
+        //  IReciveJoinTeams[0].ReciveJoinTeamStatus(sendBackJoinTeam);
+
+
+        sendBackJoinTeamValue.Value = sendBackJoinTeam;
+        // if (sendBackJoinTeam.status)
+        //     {
+        //         GameManager.Instance.playerIndex = sendBackJoinTeam.playerIndex;
+
+        //     }
     }
 
 }

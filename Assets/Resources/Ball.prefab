@@ -330,6 +330,7 @@ MonoBehaviour:
   isClick: 0
   shot: 0
   oppositeDirection: {x: 0, y: 0}
+  ballID: 
 --- !u!114 &5316542961898728492
 MonoBehaviour:
   m_ObjectHideFlags: 0
