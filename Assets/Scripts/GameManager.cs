@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameState gameState = GameState.None;
     [SerializeField] private float maxHeightScreen = 8.2f;
     [SerializeField] private float minHeightScreen = -1f;
-
+    [SerializeField] private GameObject bottomLevel;
     public Ball ball;
     public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
@@ -31,7 +31,8 @@ public class GameManager : MonoBehaviour
     [Header("Value")]
     [SerializeField] private Vector3Value ballPosition;
 
-
+    [Header("Test")]
+    [SerializeField] private TMP_Text ui_playerIndex;
 
     public void StartState(GameState _gameState)
     {
@@ -85,6 +86,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ui_playerIndex.text = playerIndex.ToString();
+        if (playerIndex > 1)
+            bottomLevel.SetActive(false);
         UpdateState();
     }
 

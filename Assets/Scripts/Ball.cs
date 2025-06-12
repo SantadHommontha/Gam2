@@ -71,11 +71,11 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             isClick = false;
         }
 
-        if (BallOnScreen())
-        {
-            Debug.Log("FFFF");
-            // TakeBvall();
-        }
+        // if (BallOnScreen())
+        // {
+        //     Debug.Log("FFFF");
+        //     // TakeBvall();
+        // }
 
     }
     private void AddForce(Vector2 _direction, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
@@ -219,7 +219,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         {
 
             gameObject.SetActive(true);
-            transform.position = new Vector3(ballDataWapper.xPosition, -1.5f, 0);
+            transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
             rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
         }
 

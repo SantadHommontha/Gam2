@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 public class JoinLobby : MonoBehaviourPunCallbacks
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,6 +21,8 @@ public class JoinLobby : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Join lobby");
+        SceneManager.LoadScene("Lobby");
+
     }
 
 
