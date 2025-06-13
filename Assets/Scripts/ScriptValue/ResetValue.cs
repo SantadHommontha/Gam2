@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ResetValue : MonoBehaviour
 {
-   [SerializeField] private List<ScriptableValueBase> scriptableObject;
-   //[SerializeField] private Reset_Value_Default defualt_value;
+    [SerializeField] private List<ScriptableValueBase> scriptableObject;
+    //[SerializeField] private Reset_Value_Default defualt_value;
 
     void Awake()
     {
@@ -12,10 +12,14 @@ public class ResetValue : MonoBehaviour
         // {
         //      T.ResetValue();
         // }
-        foreach(var T in scriptableObject)
+        if (scriptableObject.Count > 0)
         {
-            T.ResetValue();
+            foreach (var T in scriptableObject)
+            {
+                T.ResetValue();
+            }
         }
+
     }
 
 }

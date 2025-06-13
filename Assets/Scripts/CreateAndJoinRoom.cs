@@ -24,13 +24,15 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
         iamAdmin.Value = true;
-        PhotonNetwork.CreateRoom(roomname_value.Value, roomOptions);
+        PhotonNetwork.CreateRoom(roomname_value.Value);
     }
 
     public void JoinRoom()
     {
-
+        Debug.Log("FFFFFFFFFFFF");
+       // PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
+
     }
 
     public void JoinBTN()
@@ -43,8 +45,19 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     }
     public override void OnCreatedRoom()
     {
-        PhotonNetwork.LoadLevel("Game");
-        Debug.Log("Join Room");
 
+        Debug.Log("Create Room");
+        PhotonNetwork.LoadLevel("Game");
+
+    }
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Join Room");
+        PhotonNetwork.LoadLevel("Game");
+    }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+
+        Debug.LogError($"Join Room Fail COde {returnCode} , Message {message}");
     }
 }

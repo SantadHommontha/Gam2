@@ -53,7 +53,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void Start()
     {
-        GameManager.Instance.ball = this;
+      //  GameManager.Instance.ball = this;
     }
 
     // Update is called once per frame

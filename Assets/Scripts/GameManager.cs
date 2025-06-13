@@ -22,16 +22,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float maxHeightScreen = 8.2f;
     [SerializeField] private float minHeightScreen = -1f;
     [SerializeField] private GameObject bottomLevel;
-    public Ball ball;
+
     public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
-    public bool iamEndPlayer = false;
     private bool isSend = false;
 
     private PhotonView photonView;
     [Header("Value")]
     [SerializeField] private Vector3Value ballPosition;
     [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
+    [SerializeField] private BoolValue gameStart;
 
 
     [Header("GameEvent")]
@@ -40,8 +40,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
 
+
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
+    [SerializeField] private TMP_Text playerIndex_text;
 
     public void StartState(GameState _gameState)
     {
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviour
             case GameState.None:
                 break;
             case GameState.Wait:
+                gameStart.Value = false;
                 if (playerIndex == 1)
                     RamdomLevel(level1).Raise(this, -979);
                 else if (playerIndex == 2)
@@ -59,6 +62,8 @@ public class GameManager : MonoBehaviour
                     RamdomLevel(level3).Raise(this, -979);
                 break;
             case GameState.Play:
+                gameStart.Value = true;
+             //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
                 break;
@@ -95,7 +100,11 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        StartState(GameState.Play);
+        if (!PhotonNetwork.IsMessageQueueRunning)
+            PhotonNetwork.IsMessageQueueRunning = true;
+
+
+     //   StartState(GameState.Play);
     }
 
     // Update is called once per frame
@@ -109,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     private GameEvent RamdomLevel(List<GameEvent> _gameEvents)
     {
-        return _gameEvents[UnityEngine.Random.Range(0, _gameEvents.Count)];
+        return _gameEvents[UnityEngine.Random.Range(0, _gameEvents.Count - 1)];
     }
 
 
