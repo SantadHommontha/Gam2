@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -30,6 +31,14 @@ public class GameManager : MonoBehaviour
     private PhotonView photonView;
     [Header("Value")]
     [SerializeField] private Vector3Value ballPosition;
+    [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
+
+
+    [Header("GameEvent")]
+    [Space]
+    [SerializeField] private List<GameEvent> level1;
+    [SerializeField] private List<GameEvent> level2;
+    [SerializeField] private List<GameEvent> level3;
 
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
@@ -42,6 +51,12 @@ public class GameManager : MonoBehaviour
             case GameState.None:
                 break;
             case GameState.Wait:
+                if (playerIndex == 1)
+                    RamdomLevel(level1).Raise(this, -979);
+                else if (playerIndex == 2)
+                    RamdomLevel(level2).Raise(this, -979);
+                else
+                    RamdomLevel(level3).Raise(this, -979);
                 break;
             case GameState.Play:
                 break;
@@ -92,7 +107,32 @@ public class GameManager : MonoBehaviour
         UpdateState();
     }
 
-    
+    private GameEvent RamdomLevel(List<GameEvent> _gameEvents)
+    {
+        return _gameEvents[UnityEngine.Random.Range(0, _gameEvents.Count)];
+    }
+
+
+
+
+
+
+
+
+
+    public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam)
+    {
+        if (_sendBackJoinTeam.status)
+        {
+            playerIndex = _sendBackJoinTeam.playerIndex;
+            StartState(GameState.Wait);
+        }
+    }
+
+
+
+
+
     public void SetPlayerIndex()
     {
         playerIndex = int.Parse(tMP_InputField.text);
