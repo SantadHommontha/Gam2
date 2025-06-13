@@ -9,6 +9,7 @@ using UnityEngine;
 public enum GameState
 {
     None,
+    EnterName,
     Wait,
     Play,
     Over
@@ -29,13 +30,15 @@ public class GameManager : MonoBehaviour
 
     private PhotonView photonView;
     [Header("Value")]
-    [SerializeField] private Vector3Value ballPosition;
+   
     [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
     [SerializeField] private BoolValue gameStart;
 
 
     [Header("GameEvent")]
     [Space]
+    [SerializeField] private GameEvent enterName;
+    [SerializeField] private GameEvent wait;
     [SerializeField] private List<GameEvent> level1;
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
@@ -43,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
-    [SerializeField] private TMP_Text playerIndex_text;
+
 
     public void StartState(GameState _gameState)
     {
@@ -52,14 +55,18 @@ public class GameManager : MonoBehaviour
         {
             case GameState.None:
                 break;
+            case GameState.EnterName:
+                enterName.Raise(this);
+                break;
             case GameState.Wait:
                 gameStart.Value = false;
                 if (playerIndex == 1)
-                    RamdomLevel(level1).Raise(this, -979);
+                    RamdomLevel(level1).Raise(this);
                 else if (playerIndex == 2)
-                    RamdomLevel(level2).Raise(this, -979);
+                    RamdomLevel(level2).Raise(this);
                 else
-                    RamdomLevel(level3).Raise(this, -979);
+                    RamdomLevel(level3).Raise(this);
+                wait.Raise(this);
                 break;
             case GameState.Play:
                 gameStart.Value = true;
@@ -102,8 +109,8 @@ public class GameManager : MonoBehaviour
     {
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
-
-
+        StartState(GameState.EnterName);
+        sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
      //   StartState(GameState.Play);
     }
 

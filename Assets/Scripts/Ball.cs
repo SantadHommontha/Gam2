@@ -19,7 +19,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     [Header("Public")]
     [SerializeField] private float maxForce = 10;
     [SerializeField] private float maxHeightScreen = 8.2f;
-
+    [SerializeField] private float distanceToMaxForec = 2f;
     public Rigidbody2D rb;
     public Transform TARGET;
     [SerializeField] private bool isClick = false;
@@ -29,7 +29,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     private Vector2 startMousePosition;
     private Vector2 currentMousePosition;
 
-
+    public bool canTrigger = true;
 
     // Touch
     private Vector2 startTouchPosition;
@@ -44,21 +44,23 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     public Vector2 DragDirection => dragDirection;
     public Vector2 OppositeDirection => oppositeDirection;
     public string ballID;
+    public BallHandle ballHandle;
     private PhotonView photonView;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        photonView = GetComponent<PhotonView>();
+        photonView = ballHandle.photonView;
     }
     void Start()
     {
-      //  GameManager.Instance.ball = this;
+        //  GameManager.Instance.ball = this;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (isClick)
         {
             CalculateOpposite();
@@ -86,6 +88,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     {
         rb.simulated = true;
         Vector2 forceVector = _direction * _force;
+        rb.linearVelocity = Vector2.zero;
         rb.AddForce(forceVector, _forceMode2D);
     }
     private void TouchInput()
@@ -175,7 +178,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
         this.oppositeDirection = oppositeDirection;
 
-        float distance = UnityEngine.Mathf.Clamp01(vectorToMouse.magnitude);
+        float distance = UnityEngine.Mathf.Clamp(vectorToMouse.magnitude / distanceToMaxForec, 0, distanceToMaxForec);
 
         this.force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
 
@@ -226,7 +229,11 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
 
 
-
+    public void SetUP(Vector2 _position, Vector2 _rbVelocity)
+    {
+        transform.position = new Vector3(_position.x, -4.3f, 0);
+        rb.linearVelocity = _rbVelocity;
+    }
 
 
     private bool BallOnScreen()
@@ -239,15 +246,16 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!canTrigger) return;
         if (collision.TryGetComponent<PassWay>(out var way))
         {
             if (way.up)
             {
-                TakeBvall(true);
+                ballHandle.TakeBvall(true);
             }
             else
             {
-                TakeBvall(false);
+                ballHandle.TakeBvall(false);
             }
         }
     }

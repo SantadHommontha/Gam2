@@ -60,7 +60,8 @@ public class TeamManager : MonoBehaviour
 
             sendBackJoinTeam.status = true;
             sendBackJoinTeam.massage = "Join Team";
-            sendBackJoinTeam.playerIndex = ap.Count ;
+            sendBackJoinTeam.playerIndex = ap.Count;
+            Debug.Log("Ap: " + ap.Count);
 
         }
         else
@@ -78,7 +79,7 @@ public class TeamManager : MonoBehaviour
     private void RPC_ReciveJoinTeamStatus(string _statusJson)
     {
         SendBackJoinTeam sendBackJoinTeam = JsonUtility.FromJson<SendBackJoinTeam>(_statusJson);
-
+        Debug.Log("ApF: " + sendBackJoinTeam.playerIndex);
         //  IReciveJoinTeams[0].ReciveJoinTeamStatus(sendBackJoinTeam);
 
 

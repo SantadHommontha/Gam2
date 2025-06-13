@@ -20,14 +20,23 @@ public class GameEvent : ScriptableObject
            }
 
     }
+    
+     public void Raise(Component _sender)
+    {
+           foreach (var t in listeners)
+           {
+               t.OnEventRised(_sender, -979);
+           }
+
+    }
 
     public void RegisterListener(GameEventListener _gameEventListener)
     {
-      if(!listeners.Contains(_gameEventListener))
-          {
-              listeners.Add(_gameEventListener);
-          }
-       
+        if (!listeners.Contains(_gameEventListener))
+        {
+            listeners.Add(_gameEventListener);
+        }
+
     }
 
     public void UnregisterListener(GameEventListener _gameEventListener)

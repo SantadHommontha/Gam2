@@ -16,7 +16,7 @@ public class PlayerNameUI : MonoBehaviour
 
     void Start()
     {
-        sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
+       // sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
     }
     public void EnterBTN()
     {
@@ -32,11 +32,11 @@ public class PlayerNameUI : MonoBehaviour
 
     }
 
-    public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam)
-    {
-        if (_sendBackJoinTeam.status)
-        {
-            gameObject.SetActive(false);
-        }
-    }
+    // public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam)
+    // {
+    //     if (_sendBackJoinTeam.status)
+    //     {
+    //         gameObject.SetActive(false);
+    //     }
+    // }
 }
