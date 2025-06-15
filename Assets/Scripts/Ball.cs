@@ -1,11 +1,12 @@
 using UnityEngine;
 using Photon.Pun;
 
-
+[System.Serializable]
 public class BallDataWapper
 {
     public int playerSendIndex;
     public int nextPLayerIndex;
+    public bool up;
     public float xPosition;
     public float yPosition;
     public float xVelocity;
@@ -86,6 +87,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     private void AddForce(Vector2 _direction, float _force, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
     {
+        Debug.Log("Force");
         rb.simulated = true;
         Vector2 forceVector = _direction * _force;
         rb.linearVelocity = Vector2.zero;
@@ -196,37 +198,37 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
 
 
-    private void TakeBvall(bool _up)
-    {
-        BallDataWapper ballDataWapper = new BallDataWapper();
-        ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
-        ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
-        ballDataWapper.xPosition = transform.position.x;
-        ballDataWapper.yPosition = transform.position.y;
-        ballDataWapper.xVelocity = rb.linearVelocityX;
-        ballDataWapper.yVelocity = rb.linearVelocityY;
+    // private void TakeBvall(bool _up)
+    // {
+    //     BallDataWapper ballDataWapper = new BallDataWapper();
+    //     ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
+    //     ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
+    //     ballDataWapper.xPosition = transform.position.x;
+    //     ballDataWapper.yPosition = transform.position.y;
+    //     ballDataWapper.xVelocity = rb.linearVelocityX;
+    //     ballDataWapper.yVelocity = rb.linearVelocityY;
 
-        string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-        Debug.Log("Send Ball");
-        gameObject.SetActive(false);
+    //     string ballDataJson = JsonUtility.ToJson(ballDataWapper);
+    //     Debug.Log("Send Ball");
+    //     gameObject.SetActive(false);
 
-        photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
-    }
+    //     photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
+    // }
 
-    [PunRPC]
-    private void RPC_TakeBall(string _BallDataJson)
-    {
-        Debug.Log("Recive Ball");
-        BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
-        if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
-        {
+    // [PunRPC]
+    // private void RPC_TakeBall(string _BallDataJson)
+    // {
+    //     Debug.Log("Recive Ball");
+    //     BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
+    //     if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
+    //     {
 
-            gameObject.SetActive(true);
-            transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
-            rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-        }
+    //         gameObject.SetActive(true);
+    //         transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
+    //         rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
+    //     }
 
-    }
+    // }
 
 
     public void SetUP(Vector2 _position, Vector2 _rbVelocity)
@@ -246,6 +248,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log($"Trigger: " + collision.gameObject.name);
         if (!canTrigger) return;
         if (collision.TryGetComponent<PassWay>(out var way))
         {
@@ -259,7 +262,10 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             }
         }
     }
-
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+         Debug.Log($"Collision: " + collision.gameObject.name);
+    }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)

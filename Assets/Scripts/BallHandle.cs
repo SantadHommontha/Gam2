@@ -6,19 +6,28 @@ public class BallHandle : MonoBehaviour
     [SerializeField] private Ball ball;
     public PhotonView photonView;
 
-
+    private BallDataWapper ballDataWapper = new BallDataWapper();
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
     }
 
-
+    public bool isSet = true;
 
     private void CheckCurrentBallIndex()
     {
         if (photonView.IsMine)
         {
             ball.gameObject.SetActive(true);
+            if (!isSet)
+            {
+                ball.canTrigger = false;
+                float yPos = ballDataWapper.up ? -4.3f : 6.7f;
+                ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
+                ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
+                StartCoroutine(Cooldown());
+                isSet = true;
+            }
         }
         else
         {
@@ -42,6 +51,7 @@ public class BallHandle : MonoBehaviour
         BallDataWapper ballDataWapper = new BallDataWapper();
         ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
         ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
+        ballDataWapper.up = _up;
         ballDataWapper.xPosition = transform.position.x;
         ballDataWapper.yPosition = transform.position.y;
         ballDataWapper.xVelocity = ball.rb.linearVelocityX;
@@ -59,16 +69,26 @@ public class BallHandle : MonoBehaviour
     private void RPC_TakeBall(string _BallDataJson)
     {
 
-        BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
+        ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
         Debug.Log("Recive Ball From " + ballDataWapper.playerSendIndex);
+
         if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
+
         {
-            Debug.Log("Is Mine");
-            ball.canTrigger = false;
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            ball.transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
-            ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-            StartCoroutine(Cooldown());
+            isSet = false;
+            // if (photonView.IsMine)
+            // {
+            //     Debug.Log("Is Mine");
+
+            //     ball.canTrigger = false;
+
+            //     Debug.Log($"Ball Velocity {ballDataWapper.xVelocity} , {ballDataWapper.yVelocity}");
+            //     ball.transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
+            //     ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, 10);
+            //     StartCoroutine(Cooldown());
+            // }
+
         }
 
     }
