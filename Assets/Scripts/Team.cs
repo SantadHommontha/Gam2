@@ -47,7 +47,7 @@ public class Team
         }
     }
     // ลบข้อมูลออกจาก playerdata
-    public void RemovePlayer(string _playerID)
+    public bool RemovePlayer(string _playerID)
     {
         if (playerdata.ContainsKey(_playerID))
         {
@@ -55,7 +55,9 @@ public class Team
             Debug.Log($"Remove {p.playerName}");
             playerdata.Remove(_playerID);
             OnPlayerTeamChange?.Invoke();
+            return true;
         }
+        return false;
     }
     public void RemovePlayer(string _teamName, int _playerIndex)
     {

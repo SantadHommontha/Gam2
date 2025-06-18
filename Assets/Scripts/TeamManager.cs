@@ -90,5 +90,27 @@ public class TeamManager : MonoBehaviour
 
         //     }
     }
+    #region  Kick
 
+    public void KickPlayer(string _playerID)
+    {
+
+        var player = team.GetPlayerByID(_playerID);
+
+        photonView.RPC("RPC_KickPlayer", player.info.Sender);
+
+        team.RemovePlayer(_playerID);
+
+
+
+
+    }
+
+    [PunRPC]
+    private void RPC_KickPlayer()
+    {
+        RoomManager.Instance.LeaveRoom();
+    }
+
+    #endregion
 }

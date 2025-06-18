@@ -5,7 +5,6 @@ public class BallHandle : MonoBehaviour
 {
     [SerializeField] private Ball ball;
     public PhotonView photonView;
-
     private BallDataWapper ballDataWapper = new BallDataWapper();
     void Awake()
     {
@@ -21,6 +20,8 @@ public class BallHandle : MonoBehaviour
             ball.gameObject.SetActive(true);
             if (!isSet)
             {
+
+             
                 ball.canTrigger = false;
                 float yPos = ballDataWapper.up ? -4.3f : 6.7f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
@@ -48,18 +49,19 @@ public class BallHandle : MonoBehaviour
 
     public void TakeBvall(bool _up)
     {
+        ball.canTrigger = false;
         BallDataWapper ballDataWapper = new BallDataWapper();
         ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
         ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
         ballDataWapper.up = _up;
-        ballDataWapper.xPosition = transform.position.x;
-        ballDataWapper.yPosition = transform.position.y;
+        ballDataWapper.xPosition = ball.transform.position.x;
+        ballDataWapper.yPosition = ball.transform.position.y;
         ballDataWapper.xVelocity = ball.rb.linearVelocityX;
         ballDataWapper.yVelocity = ball.rb.linearVelocityY;
-
+      //  Debug.Log($"Velocity Send :{new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity)}");
         string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-        Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
-        gameObject.SetActive(false);
+      //  Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
+        ball.gameObject.SetActive(false);
 
         photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
     }
@@ -75,8 +77,10 @@ public class BallHandle : MonoBehaviour
         if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
 
         {
+            Debug.Log("I Am");
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
+
             // if (photonView.IsMine)
             // {
             //     Debug.Log("Is Mine");

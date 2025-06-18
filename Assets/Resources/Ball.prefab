@@ -173,6 +173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 3514205473754882231}
   photonView: {fileID: 2301562080628136443}
+  up: 1
+  ballup: {fileID: 11400000, guid: 089b85d94926751479db8dc6005f80d7, type: 2}
   isSet: 1
 --- !u!114 &2301562080628136443
 MonoBehaviour:
