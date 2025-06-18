@@ -24,7 +24,7 @@ public class TeamManager : MonoBehaviour
     [Header("Value")]
     [Space]
     [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
-
+    [SerializeField] private List<PlayerDisplayerValue> playerDisplayerValues;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -38,6 +38,7 @@ public class TeamManager : MonoBehaviour
     void Start()
     {
         //  DontDestroyOnLoad(this.gameObject);
+        team.OnPlayerTeamChange += UpdatePlayerDisplay;
     }
 
     public void JoinTeam(PlayerData _playerData)
@@ -61,7 +62,7 @@ public class TeamManager : MonoBehaviour
             sendBackJoinTeam.status = true;
             sendBackJoinTeam.massage = "Join Team";
             sendBackJoinTeam.playerIndex = ap.Count;
-            Debug.Log("Ap: " + ap.Count);
+            //   Debug.Log("Ap: " + ap.Count);
 
         }
         else
@@ -79,7 +80,7 @@ public class TeamManager : MonoBehaviour
     private void RPC_ReciveJoinTeamStatus(string _statusJson)
     {
         SendBackJoinTeam sendBackJoinTeam = JsonUtility.FromJson<SendBackJoinTeam>(_statusJson);
-        Debug.Log("ApF: " + sendBackJoinTeam.playerIndex);
+        //  Debug.Log("ApF: " + sendBackJoinTeam.playerIndex);
         //  IReciveJoinTeams[0].ReciveJoinTeamStatus(sendBackJoinTeam);
 
 
@@ -101,6 +102,8 @@ public class TeamManager : MonoBehaviour
 
         team.RemovePlayer(_playerID);
 
+        Debug.Log("Kick");
+
 
 
 
@@ -113,4 +116,26 @@ public class TeamManager : MonoBehaviour
     }
 
     #endregion
+
+
+
+    private void UpdatePlayerDisplay()
+    {
+        int num = 1;
+        foreach (var p in playerDisplayerValues)
+        {
+            PlayerData playerData = new PlayerData();
+            playerData.playerName = $"Player {num++}";
+            p.Value = playerData;
+        }
+
+        var allPLayer = team.GetAllPlayer();
+        for (int i = 0; i < allPLayer.Count; i++)
+        {
+            var playerDB = new PlayerData();
+            playerDB = allPLayer[i];
+            playerDisplayerValues[i].Value = playerDB;
+        }
+
+    }
 }

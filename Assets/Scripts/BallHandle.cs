@@ -21,7 +21,7 @@ public class BallHandle : MonoBehaviour
             if (!isSet)
             {
 
-             
+
                 ball.canTrigger = false;
                 float yPos = ballDataWapper.up ? -4.3f : 6.7f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
@@ -58,9 +58,9 @@ public class BallHandle : MonoBehaviour
         ballDataWapper.yPosition = ball.transform.position.y;
         ballDataWapper.xVelocity = ball.rb.linearVelocityX;
         ballDataWapper.yVelocity = ball.rb.linearVelocityY;
-      //  Debug.Log($"Velocity Send :{new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity)}");
+        //  Debug.Log($"Velocity Send :{new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity)}");
         string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-      //  Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
+        //  Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
         ball.gameObject.SetActive(false);
 
         photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
@@ -101,5 +101,10 @@ public class BallHandle : MonoBehaviour
     {
         yield return new WaitForSeconds(_time);
         ball.canTrigger = true;
+    }
+
+    public void OnTouchEndPoint()
+    {
+        gameObject.SetActive(false);
     }
 }

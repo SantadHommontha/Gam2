@@ -2,11 +2,13 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
+using System.Collections;
+
 
 public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 {
     [SerializeField] private int maxPlayer = 3;
-
+    [SerializeField] private TMP_Text meassge;
     //UI
     [Space]
     [SerializeField] private TMP_InputField roomName;
@@ -16,21 +18,31 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     [SerializeField] private BoolValue iamAdmin;
     [SerializeField] private StringValue adminCode_value;
 
+    void Awake()
+    {
+        ChangeMeassge();
+    }
+
     public void CreateRoom()
     {
         //  PhotonNetwork.JoinOrCreateRoom("Mine", null, null);
-
+        ChangeMeassge("Create Room");
         roomname_value.Value = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
         iamAdmin.Value = true;
         PhotonNetwork.CreateRoom(roomname_value.Value);
     }
-
+    private void ChangeMeassge(string _text = "")
+    {
+        if (meassge)
+            meassge.text = _text;
+    }
     public void JoinRoom()
     {
-        Debug.Log("FFFFFFFFFFFF");
-       // PhotonNetwork.IsMessageQueueRunning = false;
+
+        // PhotonNetwork.IsMessageQueueRunning = false;
+        ChangeMeassge("Join Room");
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
 
     }
@@ -57,7 +69,14 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
+        ChangeMeassge("Not Found Room");
+        StartCoroutine(IE_Cooldown());
 
-        Debug.LogError($"Join Room Fail COde {returnCode} , Message {message}");
+    }
+
+    private IEnumerator IE_Cooldown()
+    {
+        yield return new WaitForSeconds(3f);
+        ChangeMeassge();
     }
 }

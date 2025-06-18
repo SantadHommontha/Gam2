@@ -3,8 +3,11 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-
-
+[CreateAssetMenu(menuName = "Setting/GameSetting")]
+public class GameSetting : ScriptableObject
+{
+    public float gameTime = 120f;
+}
 
 public enum GameState
 {
@@ -20,25 +23,33 @@ public class GameManager : MonoBehaviour
     [Header("Public")]
 
     [SerializeField] private GameState gameState = GameState.None;
-    [SerializeField] private float maxHeightScreen = 8.2f;
-    [SerializeField] private float minHeightScreen = -1f;
+
     [SerializeField] private GameObject bottomLevel;
 
     public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
-    private bool isSend = false;
+    [SerializeField] private CreateAndJoinRoom createAndJoinRoom;
+    [SerializeField] private GameTimer gameTimer;
+
+    [SerializeField] private GameSetting gameSetting;
 
     private PhotonView photonView;
     [Header("Value")]
-   
+
     [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
     [SerializeField] private BoolValue gameStart;
+    [SerializeField] private IntValue score;
+    [SerializeField] private FloatValue timer;
+
 
 
     [Header("GameEvent")]
     [Space]
     [SerializeField] private GameEvent enterName;
     [SerializeField] private GameEvent wait;
+    [SerializeField] private GameEvent gameOver;
+    [Header("Leavel")]
+    [Space]
     [SerializeField] private List<GameEvent> level1;
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
@@ -67,12 +78,16 @@ public class GameManager : MonoBehaviour
                 else
                     RamdomLevel(level3).Raise(this);
                 wait.Raise(this);
+
                 break;
             case GameState.Play:
                 gameStart.Value = true;
-             //   RamdomLevel(level1).Raise(this, -979);
+                gameTimer.SetTime(gameSetting.gameTime);
+                gameTimer.StartTimer();
+                //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
+                gameOver.Raise(this);
                 break;
         }
     }
@@ -89,7 +104,11 @@ public class GameManager : MonoBehaviour
                 // if (BallOnScreen() && !iamEndPlayer && !isSend)
                 // {
                 //     TakeBvall();
-                // }
+                // }.
+                if (gameTimer.timer <= 0)
+                {
+                    StartState(GameState.Over);
+                }
                 break;
             case GameState.Over:
                 break;
@@ -111,7 +130,7 @@ public class GameManager : MonoBehaviour
             PhotonNetwork.IsMessageQueueRunning = true;
         StartState(GameState.EnterName);
         sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
-     //   StartState(GameState.Play);
+        //   StartState(GameState.Play);
     }
 
     // Update is called once per frame
@@ -129,13 +148,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
-
-
-
-
-
-
     public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam)
     {
         if (_sendBackJoinTeam.status)
@@ -145,12 +157,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
-
-
     public void SetPlayerIndex()
     {
         playerIndex = int.Parse(tMP_InputField.text);
+    }
+
+
+    public void AddScore(int _score = 1)
+    {
+        photonView.RPC("RPC_AddScore", RpcTarget.MasterClient, _score);
+    }
+    [PunRPC]
+    private void RPC_AddScore(int _score)
+    {
+        score.Value += _score;
+    }
+
+
+    public void NewRoom()
+    {
+        createAndJoinRoom.CreateRoom();
+    }
+
+    public void GameStart()
+    {
+        StartState(GameState.Play);
     }
 }
