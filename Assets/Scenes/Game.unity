@@ -5110,6 +5110,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3533793698810975401, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4171537703834650250, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5189,6 +5193,30 @@ PrefabInstance:
     - target: {fileID: 4171537703834650250, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358472323647220484, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 81.1729
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358472323647220484, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655806618171014176, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_text
+      value: "\u200B"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655806618171014176, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655806618171014176, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4749292067008616888, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
+      propertyPath: m_Text
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 4749292067008616888, guid: 65289dc1cb833504cb0f23b4aa1ff088, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
