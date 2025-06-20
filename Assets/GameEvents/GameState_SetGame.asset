@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d58ad3665d2db34c94dc9fd60215505, type: 3}
-  m_Name: GameSetting
+  m_Script: {fileID: 11500000, guid: e4b35934d41945748b97261ce0017020, type: 3}
+  m_Name: GameState_SetGame
   m_EditorClassIdentifier: 
-  gameTime: 120
+  description: 
+  listeners: []

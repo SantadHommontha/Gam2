@@ -26,12 +26,13 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         //  PhotonNetwork.JoinOrCreateRoom("Mine", null, null);
+        Debug.Log("CCC");
         ChangeMeassge("Create Room");
         roomname_value.Value = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
         iamAdmin.Value = true;
-        PhotonNetwork.CreateRoom(roomname_value.Value);
+        PhotonNetwork.CreateRoom(roomname_value.Value,roomOptions,TypedLobby.Default);
     }
     private void ChangeMeassge(string _text = "")
     {

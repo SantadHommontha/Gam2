@@ -22,11 +22,11 @@ public class BallHandle : MonoBehaviour
             {
 
 
-                ball.canTrigger = false;
+                ball.canTrigger = true;
                 float yPos = ballDataWapper.up ? -4.3f : 6.7f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
                 ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-                StartCoroutine(Cooldown());
+                //  StartCoroutine(Cooldown());
                 isSet = true;
             }
         }

@@ -252,11 +252,11 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         if (!canTrigger) return;
         if (collision.TryGetComponent<PassWay>(out var way))
         {
-            if (way.up)
+            if (way.up && rb.linearVelocityY > 0)
             {
                 ballHandle.TakeBvall(true);
             }
-            else
+            else if (!way.up && rb.linearVelocityY < 0)
             {
                 ballHandle.TakeBvall(false);
             }
@@ -264,7 +264,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-         Debug.Log($"Collision: " + collision.gameObject.name);
+        Debug.Log($"Collision: " + collision.gameObject.name);
     }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {

@@ -3,17 +3,14 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Setting/GameSetting")]
-public class GameSetting : ScriptableObject
-{
-    public float gameTime = 120f;
-}
+
 
 public enum GameState
 {
     None,
     EnterName,
     Wait,
+    SetGame,
     Play,
     Over
 }
@@ -28,7 +25,7 @@ public class GameManager : MonoBehaviour
 
     public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
-    [SerializeField] private CreateAndJoinRoom createAndJoinRoom;
+   
     [SerializeField] private GameTimer gameTimer;
 
     [SerializeField] private GameSetting gameSetting;
@@ -40,16 +37,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BoolValue gameStart;
     [SerializeField] private IntValue score;
     [SerializeField] private FloatValue timer;
+    [SerializeField] private BoolValue iamAdmin;
 
 
 
     [Header("GameEvent")]
-    [Space]
+
     [SerializeField] private GameEvent enterName;
     [SerializeField] private GameEvent wait;
     [SerializeField] private GameEvent gameOver;
+    [SerializeField] private GameEvent setGame;
     [Header("Leavel")]
-    [Space]
+
     [SerializeField] private List<GameEvent> level1;
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
@@ -62,12 +61,16 @@ public class GameManager : MonoBehaviour
     public void StartState(GameState _gameState)
     {
         gameState = _gameState;
+        Debug.Log($"New State {gameState}");
         switch (gameState)
         {
             case GameState.None:
                 break;
             case GameState.EnterName:
                 enterName.Raise(this);
+                break;
+            case GameState.SetGame:
+                setGame.Raise(this);
                 break;
             case GameState.Wait:
                 gameStart.Value = false;
@@ -128,7 +131,11 @@ public class GameManager : MonoBehaviour
     {
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
-        StartState(GameState.EnterName);
+
+        if (!iamAdmin.Value)
+            StartState(GameState.EnterName);
+        else
+            StartState(GameState.SetGame);
         sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
@@ -171,12 +178,19 @@ public class GameManager : MonoBehaviour
     private void RPC_AddScore(int _score)
     {
         score.Value += _score;
+        photonView.RPC("RPC_ReciveSCore", RpcTarget.Others, score.Value);
+    }
+    [PunRPC]
+    private void RPC_ReciveSCore(int _score)
+    {
+        score.Value += _score;
     }
 
 
     public void NewRoom()
     {
-        createAndJoinRoom.CreateRoom();
+        RoomManager.Instance.NewRoom();
+      
     }
 
     public void GameStart()

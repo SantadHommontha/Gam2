@@ -91,6 +91,16 @@ public class TeamManager : MonoBehaviour
 
         //     }
     }
+
+    public void LeaveRoom(string _playerID)
+    {
+        photonView.RPC("RPC_LEaveRoom", RpcTarget.MasterClient, _playerID);
+    }
+    [PunRPC]
+    private void RPC_LEaveRoom(string _playerID)
+    {
+        KickPlayer(_playerID);
+    }
     #region  Kick
 
     public void KickPlayer(string _playerID)
@@ -117,7 +127,17 @@ public class TeamManager : MonoBehaviour
 
     #endregion
 
+    public void OnNewRoom()
+    {
+        var ap = team.GetAllPlayer();
+        PlayerData[] allPlayer = new PlayerData[ap.Count];
+        ap.CopyTo(allPlayer);
 
+        foreach (var T in allPlayer)
+        {
+            KickPlayer(T.playerID);
+        }
+    }
 
     private void UpdatePlayerDisplay()
     {

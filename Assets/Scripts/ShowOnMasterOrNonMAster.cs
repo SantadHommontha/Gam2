@@ -6,11 +6,7 @@ public class ShowOnMasterOrNonMAster : MonoBehaviour
 {
     [SerializeField] private List<GameObject> masterShow;
     [SerializeField] private List<GameObject> nonMasterShow;
-    void Awake()
-    {
-
-        Fetch();
-    }
+  
 
     public void Fetch()
     {
