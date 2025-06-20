@@ -1,14 +1,26 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Collections;
-public class BallHandle : MonoBehaviour
+public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
 {
     [SerializeField] private Ball ball;
     public PhotonView photonView;
+    public string ballID;
     private BallDataWapper ballDataWapper = new BallDataWapper();
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
+    }
+
+    private void HideBall()
+    {
+        ball.gameObject.SetActive(false);
+        ball.TARGET.gameObject.SetActive(false);
+    }
+    private void ShowBall()
+    {
+        ball.gameObject.SetActive(true);
+        ball.TARGET.gameObject.SetActive(true);
     }
 
     public bool isSet = true;
@@ -17,7 +29,8 @@ public class BallHandle : MonoBehaviour
     {
         if (photonView.IsMine)
         {
-            ball.gameObject.SetActive(true);
+
+            ShowBall();
             if (!isSet)
             {
 
@@ -32,7 +45,8 @@ public class BallHandle : MonoBehaviour
         }
         else
         {
-            ball.gameObject.SetActive(false);
+
+            HideBall();
         }
     }
 
@@ -43,7 +57,10 @@ public class BallHandle : MonoBehaviour
     }
 
 
-
+    public void AddForce(Vector2 _direction, float _force)
+    {
+        ball.AddForce(_direction, _force);
+    }
 
 
 
@@ -61,8 +78,8 @@ public class BallHandle : MonoBehaviour
         //  Debug.Log($"Velocity Send :{new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity)}");
         string ballDataJson = JsonUtility.ToJson(ballDataWapper);
         //  Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
-        ball.gameObject.SetActive(false);
 
+        HideBall();
         photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
     }
 
@@ -105,6 +122,16 @@ public class BallHandle : MonoBehaviour
 
     public void OnTouchEndPoint()
     {
-        gameObject.SetActive(false);
+        //  HideBall();
+        PhotonNetwork.Destroy(this.gameObject);
+    }
+
+     public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)
+        {
+            string id = (string)info.photonView.InstantiationData[0];
+            ballID = id;
+        }
     }
 }

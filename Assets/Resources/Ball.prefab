@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2639568090587393045}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -1, w: 0}
-  m_LocalPosition: {x: 0.036, y: 5.741, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4.3499, y: 4.3499, z: 4.3499}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -173,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 3514205473754882231}
   photonView: {fileID: 2301562080628136443}
+  ballID: 
   isSet: 1
 --- !u!114 &2301562080628136443
 MonoBehaviour:
@@ -225,7 +226,7 @@ Transform:
   m_GameObject: {fileID: 6702554883305459382}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.14, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -372,3 +373,4 @@ MonoBehaviour:
   oppositeDirection: {x: 0, y: 0}
   ballID: 
   ballHandle: {fileID: 3612451343537771076}
+  gameStart: {fileID: 11400000, guid: bfc95f583a6ca06409e20095d2d3cb22, type: 2}

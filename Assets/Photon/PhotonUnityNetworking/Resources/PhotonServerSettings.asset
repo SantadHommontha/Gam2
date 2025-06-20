@@ -47,6 +47,7 @@ MonoBehaviour:
   - RPC_AddScore
   - RPC_ReciveSCore
   - RPC_LEaveRoom
+  - RPC_GameData
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

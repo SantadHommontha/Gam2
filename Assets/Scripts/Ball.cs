@@ -48,6 +48,9 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     public BallHandle ballHandle;
     private PhotonView photonView;
 
+    [Header("Value")]
+    [SerializeField] private BoolValue gameStart;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -61,7 +64,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     // Update is called once per frame
     void Update()
     {
-
+        if (!gameStart.Value) return;
         if (isClick)
         {
             CalculateOpposite();
@@ -85,9 +88,9 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     {
         AddForce(_direction, force, _forceMode2D);
     }
-    private void AddForce(Vector2 _direction, float _force, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
+    public void AddForce(Vector2 _direction, float _force, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
     {
-        Debug.Log("Force");
+        // Debug.Log("Force");
         rb.simulated = true;
         Vector2 forceVector = _direction * _force;
         rb.linearVelocity = Vector2.zero;
@@ -95,6 +98,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     private void TouchInput()
     {
+        if (!gameStart.Value) return;
         if (Input.touchCount > 0)
         {
             // วนลูปผ่าน Touch ทั้งหมดที่กำลังใช้งานอยู่
@@ -146,6 +150,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void FixedUpdate()
     {
+        if (!gameStart.Value) return;
         if (shot)
         {
             shot = false;
@@ -188,6 +193,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void OnMouseDown()
     {
+        if (!gameStart.Value) return;
         isClick = true;
     }
 
@@ -262,10 +268,10 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             }
         }
     }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log($"Collision: " + collision.gameObject.name);
-    }
+    // void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     Debug.Log($"Collision: " + collision.gameObject.name);
+    // }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)

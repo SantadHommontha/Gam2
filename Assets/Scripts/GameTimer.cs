@@ -18,7 +18,7 @@ public class GameTimer : MonoBehaviour
     public float timer;
     protected Coroutine coroutineTimeUpdate;
     [Header("Value")]
-    [SerializeField] private FloatValue gameTime;
+    [SerializeField] private FloatValue gametimer;
     [Header("Event")]
     [SerializeField] protected GameEvent timerUpdateEvent;
 
@@ -27,15 +27,12 @@ public class GameTimer : MonoBehaviour
     {
         time = _time;
     }
-    public void SetTime()
-    {
-        time = gameTime.Value;
-    }
     public void StartTimer()
     {
         if (coroutineTimeUpdate != null)
             StopCoroutine(coroutineTimeUpdate);
-        coroutineTimeUpdate = StartCoroutine(GameTimerUpdate(timer));
+
+        coroutineTimeUpdate = StartCoroutine(GameTimerUpdate(time));
     }
     public void StopTimer()
     {
@@ -45,27 +42,32 @@ public class GameTimer : MonoBehaviour
     }
 
 
-    protected virtual void StartTimeCount()
-    {
+    // protected virtual void StartTimeCount()
+    // {
 
-        if (coroutineTimeUpdate != null)
-            StopCoroutine(coroutineTimeUpdate);
-       // timer = TIME;
-        coroutineTimeUpdate = StartCoroutine(GameTimerUpdate(gameTime.Value));
+    //     if (coroutineTimeUpdate != null)
+    //         StopCoroutine(coroutineTimeUpdate);
+    //     // timer = TIME;
+    //     coroutineTimeUpdate = StartCoroutine(GameTimerUpdate(gameTime.Value));
 
 
-    }
+    // }
     protected virtual IEnumerator GameTimerUpdate(float _gameTime)
     {
+        timer = _gameTime;
         while ((timer > 0))
         {
-            timerUpdateEvent.Raise(this, timer);
+            if (timerUpdateEvent)
+                timerUpdateEvent.Raise(this, timer);
             yield return new WaitForSeconds(1);
-            timerUpdateEvent.Raise(this, timer);
+            if (timerUpdateEvent)
+                timerUpdateEvent.Raise(this, timer);
 
             timer--;
+            gametimer.Value = timer;
         }
-        timerUpdateEvent.Raise(this, timer);
+        if (timerUpdateEvent)
+            timerUpdateEvent.Raise(this, timer);
         coroutineTimeUpdate = null;
     }
 }

@@ -1,9 +1,17 @@
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
 
+
+[System.Serializable]
+public class GameDataWapper
+{
+    public bool gameStart;
+    public float gameTime;
+}
 
 public enum GameState
 {
@@ -16,6 +24,7 @@ public enum GameState
 }
 public class GameManager : MonoBehaviour
 {
+    public bool isPlayer;
     public static GameManager Instance;
     [Header("Public")]
 
@@ -25,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
-   
+
     [SerializeField] private GameTimer gameTimer;
 
     [SerializeField] private GameSetting gameSetting;
@@ -87,9 +96,11 @@ public class GameManager : MonoBehaviour
                 gameStart.Value = true;
                 gameTimer.SetTime(gameSetting.gameTime);
                 gameTimer.StartTimer();
+                SendGameData();
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
+                gameTimer.StopTimer();
                 gameOver.Raise(this);
                 break;
         }
@@ -129,13 +140,24 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        if (!PhotonNetwork.InRoom)
+            SceneManager.LoadScene("Loading");
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
-        if (!iamAdmin.Value)
-            StartState(GameState.EnterName);
+
+        if (isPlayer)
+        {
+                StartState(GameState.EnterName);
+        }
         else
-            StartState(GameState.SetGame);
+        {
+            if (!iamAdmin.Value)
+                StartState(GameState.EnterName);
+            else
+                StartState(GameState.SetGame);
+        }
+
         sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
@@ -190,11 +212,32 @@ public class GameManager : MonoBehaviour
     public void NewRoom()
     {
         RoomManager.Instance.NewRoom();
-      
+
     }
 
     public void GameStart()
     {
         StartState(GameState.Play);
+    }
+    private void SendGameData()
+    {
+        GameDataWapper gameDataWapper = new GameDataWapper();
+        gameDataWapper.gameStart = gameStart.Value;
+        gameDataWapper.gameTime = gameSetting.gameTime;
+
+        string dataJson = JsonUtility.ToJson(gameDataWapper);
+
+        photonView.RPC("RPC_GameData", RpcTarget.Others, dataJson);
+    }
+    [PunRPC]
+    private void RPC_GameData(string _dataJson)
+    {
+        GameDataWapper gameDataWapper = JsonUtility.FromJson<GameDataWapper>(_dataJson);
+        if (gameDataWapper.gameStart)
+        {
+            gameSetting.gameTime = gameDataWapper.gameTime;
+            StartState(GameState.Play);
+
+        }
     }
 }

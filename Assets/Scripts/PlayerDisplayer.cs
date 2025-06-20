@@ -26,13 +26,13 @@ public class PlayerDisplayer : MonoBehaviour
 
     private void UpdateName(PlayerData _playerData)
     {
-        playerName.text = _playerData.playerName;
+        playerName.text = $"{GameManager.Instance.playerIndex}: {_playerData.playerName}";
     }
 
 
     public void KickBtn()
     {
         Debug.Log($"BTN {playerValue.Value.playerName} : {playerValue.Value.playerID}");
-            TeamManager.Instance.KickPlayer(playerValue.Value.playerID);
+        TeamManager.Instance.KickPlayer(playerValue.Value.playerID);
     }
 }
