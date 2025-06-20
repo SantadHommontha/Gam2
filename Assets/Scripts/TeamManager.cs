@@ -15,7 +15,7 @@ public class TeamManager : MonoBehaviour
     public static TeamManager Instance;
     public Action<SendBackJoinTeam> ac_sendBackJoinTeam;
     private PhotonView photonView;
-    private Team team = new Team();
+    public Team team = new Team();
 
 
 

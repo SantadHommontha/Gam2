@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
 
         if (isPlayer)
         {
-                StartState(GameState.EnterName);
+            StartState(GameState.EnterName);
         }
         else
         {
@@ -239,5 +239,21 @@ public class GameManager : MonoBehaviour
             StartState(GameState.Play);
 
         }
+    }
+
+
+    public void SetPlayerIndex(int _playerIndex, int _newIndex)
+    {
+        var player = TeamManager.Instance.team.GetPlayerByIndex(_playerIndex);
+
+        photonView.RPC("RPC_SetPlayerIndex", player.info.Sender, _newIndex);
+    }
+
+    [PunRPC]
+    private void RPC_SetPlayerIndex(int _newIndex)
+    {
+
+        playerIndex = _newIndex;
+        StartState(GameState.Wait);
     }
 }

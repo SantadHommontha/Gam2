@@ -116,6 +116,15 @@ public class Team
         }
         return null;
     }
+    public PlayerData GetPlayerByIndex(int _index)
+    {
+        if (_index < playerdata.Count)
+        {
+            var pl = playerdata.ToArray();
+            return pl[_index].Value;
+        }
+        return null;
+    }
     public void LogShow()
     {
         foreach (var player in playerdata)
