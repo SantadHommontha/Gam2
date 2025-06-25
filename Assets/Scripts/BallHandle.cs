@@ -7,6 +7,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     public PhotonView photonView;
     public string ballID;
     private BallDataWapper ballDataWapper = new BallDataWapper();
+    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -68,8 +69,8 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     {
         ball.canTrigger = false;
         BallDataWapper ballDataWapper = new BallDataWapper();
-        ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
-        ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
+        ballDataWapper.playerSendIndex = myPlayerDataInfo.Value.playerIndex;
+        ballDataWapper.nextPLayerIndex = _up ? myPlayerDataInfo.Value.playerIndex + 1 : myPlayerDataInfo.Value.playerIndex - 1;
         ballDataWapper.up = _up;
         ballDataWapper.xPosition = ball.transform.position.x;
         ballDataWapper.yPosition = ball.transform.position.y;
@@ -91,7 +92,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
         Debug.Log("Recive Ball From " + ballDataWapper.playerSendIndex);
 
-        if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
+        if (ballDataWapper.nextPLayerIndex == myPlayerDataInfo.Value.playerIndex)
 
         {
             Debug.Log("I Am");

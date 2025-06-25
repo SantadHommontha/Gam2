@@ -10,8 +10,8 @@ public class PlayerData
     public PhotonMessageInfo info;
     public string playerID;
     public string teamName;
+    public int playerIndex;
     public string playerName;
-    public string code;
 }
 
 public class Team
@@ -21,8 +21,16 @@ public class Team
     // จะถูก Invoke ตอนที่ค่า playerdata มีการเปลี่ยนแปลง
     public Action OnPlayerTeamChange;
 
+    public int DataCount => playerdata.Count;
+    public bool CanAddPlayere(PlayerData _data)
+    {
+        if (playerdata.ContainsKey(_data.playerID))
+            return false;
+        if (playerdata.Count >= 3)
+            return false;
 
-
+        return true;
+    }
     // ลองเพิ่มข้อมูลลงใน playerdata ถ้าเพื่มสำเร็จจะ return ค่า True ถ้าเพื่มไม่ได้จะ return false
     public bool TryToAddPlayer(PlayerData _data)
     {
@@ -36,12 +44,27 @@ public class Team
             return false;
         }
     }
+
+    public bool TryToAddPlayer(PlayerData _data, out PlayerData playerData)
+    {
+        if (!playerdata.ContainsKey(_data.playerID))
+        {
+            AddPlayer(_data);
+            playerData = GetPlayerByID(_data.playerID);
+            return true;
+        }
+        else
+        {
+            playerData = null;
+            return false;
+        }
+    }
     // เพิ่มข้อมูลลงใน playerdata
     public void AddPlayer(PlayerData _data)
     {
         if (!playerdata.ContainsKey(_data.playerID))
         {
-            Debug.Log($"Add {_data.playerName} To {_data.teamName} Team");
+            Debug.Log($"Add {_data.playerName}");
             playerdata.Add(_data.playerID, _data);
             OnPlayerTeamChange?.Invoke();
         }

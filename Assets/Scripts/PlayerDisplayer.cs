@@ -12,6 +12,8 @@ public class PlayerDisplayer : MonoBehaviour
     [SerializeField] private TMP_Text playerName;
     [SerializeField] private PlayerDisplayerValue playerValue;
 
+    [SerializeField] private TMP_InputField tMP_InputField;
+
 
     void Start()
     {
@@ -26,7 +28,8 @@ public class PlayerDisplayer : MonoBehaviour
 
     private void UpdateName(PlayerData _playerData)
     {
-        playerName.text = $"{GameManager.Instance.playerIndex}: {_playerData.playerName}";
+        playerName.text = $"{_playerData.playerIndex}: {_playerData.playerName}";
+        tMP_InputField.text = playerValue.Value.playerIndex.ToString();
     }
 
 
@@ -35,4 +38,11 @@ public class PlayerDisplayer : MonoBehaviour
         Debug.Log($"BTN {playerValue.Value.playerName} : {playerValue.Value.playerID}");
         TeamManager.Instance.KickPlayer(playerValue.Value.playerID);
     }
+
+    public void SetBTN()
+    {
+        TeamManager.Instance.ChangePlayerIndex(playerValue.Value.playerID, int.Parse(tMP_InputField.text));
+
+    }
+
 }

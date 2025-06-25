@@ -22,12 +22,14 @@ public class SpawnBall : MonoBehaviour
     [SerializeField] private BoolValue gameStart;
     void Awake()
     {
-        if (Instance != null && Instance != this)
-            Destroy(this.gameObject);
-        else
-            Instance = this;
+
+        Instance = this;
 
         photonView = GetComponent<PhotonView>();
+    }
+    void OnEnable()
+    {
+          Instance = this;
     }
     void Start()
     {

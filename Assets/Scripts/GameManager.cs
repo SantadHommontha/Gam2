@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using Photon.Pun.Demo.Cockpit;
+using System.Linq;
 
 
 
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject bottomLevel;
 
-    public int playerIndex = 0;
+    //  public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
 
     [SerializeField] private GameTimer gameTimer;
@@ -42,11 +44,12 @@ public class GameManager : MonoBehaviour
     private PhotonView photonView;
     [Header("Value")]
 
-    [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
+    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private BoolValue gameStart;
     [SerializeField] private IntValue score;
     [SerializeField] private FloatValue timer;
     [SerializeField] private BoolValue iamAdmin;
+    // [SerializeField] private PlayerDisplayerValue myPlayerdata;
 
 
 
@@ -58,6 +61,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameEvent setGame;
     [Header("Leavel")]
 
+    [SerializeField] private List<GameEvent> level1Player;
     [SerializeField] private List<GameEvent> level1;
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
@@ -83,12 +87,29 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Wait:
                 gameStart.Value = false;
-                if (playerIndex == 1)
-                    RamdomLevel(level1).Raise(this);
-                else if (playerIndex == 2)
-                    RamdomLevel(level2).Raise(this);
+                int playerCount = TeamManager.Instance.playerCount;
+                Debug.Log($"PlayerCount: {playerCount}");
+                if (playerCount == 1)
+                {
+                    RamdomLevel(level1Player).Raise(this);
+                }
+                else if (playerCount == 2)
+                {
+                    if (myPlayerDataInfo.Value.playerIndex == 1)
+                        RamdomLevel(level1).Raise(this);
+                    else
+                        RamdomLevel(level3).Raise(this);
+                }
                 else
-                    RamdomLevel(level3).Raise(this);
+                {
+                    if (myPlayerDataInfo.Value.playerIndex == 1)
+                        RamdomLevel(level1).Raise(this);
+                    else if (myPlayerDataInfo.Value.playerIndex == 2)
+                        RamdomLevel(level2).Raise(this);
+                    else
+                        RamdomLevel(level3).Raise(this);
+                }
+
                 wait.Raise(this);
 
                 break;
@@ -96,7 +117,8 @@ public class GameManager : MonoBehaviour
                 gameStart.Value = true;
                 gameTimer.SetTime(gameSetting.gameTime);
                 gameTimer.StartTimer();
-                SendGameData();
+                if (PhotonNetwork.IsMasterClient)
+                    SendGameData();
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
@@ -115,6 +137,7 @@ public class GameManager : MonoBehaviour
             case GameState.Wait:
                 break;
             case GameState.Play:
+
                 // if (BallOnScreen() && !iamEndPlayer && !isSend)
                 // {
                 //     TakeBvall();
@@ -145,6 +168,7 @@ public class GameManager : MonoBehaviour
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
+#if UNITY_EDITOR
 
         if (isPlayer)
         {
@@ -152,22 +176,40 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (!iamAdmin.Value)
-                StartState(GameState.EnterName);
-            else
-                StartState(GameState.SetGame);
+            StartState(GameState.SetGame);
         }
 
-        sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
+#else
+            if (!iamAdmin.Value)
+            StartState(GameState.EnterName);
+        else
+            StartState(GameState.SetGame);
+
+        
+#endif
+
+        // if (isPlayer)
+        // {
+        //     StartState(GameState.EnterName);
+        // }
+        // else
+        // {
+        //     if (!iamAdmin.Value)
+        //         StartState(GameState.EnterName);
+        //     else
+        //         StartState(GameState.SetGame);
+        // }
+
+        myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
 
     // Update is called once per frame
     void Update()
     {
-        ui_playerIndex.text = playerIndex.ToString();
-        if (playerIndex > 1)
-            bottomLevel.SetActive(false);
+        ui_playerIndex.text = myPlayerDataInfo.Value.playerIndex.ToString();
+        // if (playerIndex > 1)
+        //     bottomLevel.SetActive(false);
         UpdateState();
     }
 
@@ -177,18 +219,18 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam)
+    public void ReciveJoinTeamStatus(MyPlayerDataInfo _myPlayerDataInfo)
     {
-        if (_sendBackJoinTeam.status)
+        if (_myPlayerDataInfo.status)
         {
-            playerIndex = _sendBackJoinTeam.playerIndex;
+            myPlayerDataInfo.Value.playerIndex = _myPlayerDataInfo.playerIndex;
             StartState(GameState.Wait);
         }
     }
 
     public void SetPlayerIndex()
     {
-        playerIndex = int.Parse(tMP_InputField.text);
+        myPlayerDataInfo.Value.playerIndex = int.Parse(tMP_InputField.text);
     }
 
 
@@ -253,7 +295,30 @@ public class GameManager : MonoBehaviour
     private void RPC_SetPlayerIndex(int _newIndex)
     {
 
-        playerIndex = _newIndex;
+        myPlayerDataInfo.Value.playerIndex = _newIndex;
         StartState(GameState.Wait);
+    }
+
+
+    public void SetMyLevel(int _level, int _subLevel)
+    {
+        Debug.Log("SetMyLevel");
+        switch (_level)
+        {
+            case 0:
+                level1Player[_subLevel].Raise(this);
+                break;
+            case 1:
+                level1[_subLevel].Raise(this);
+                break;
+            case 2:
+                level2[_subLevel].Raise(this);
+                break;
+            case 3:
+                level3[_subLevel].Raise(this);
+
+                break;
+        }
+
     }
 }

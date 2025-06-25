@@ -708,7 +708,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6860610162421738263}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7944762020767869257}
+        m_TargetAssemblyTypeName: PlayerDisplayer, Assembly-CSharp
+        m_MethodName: SetBTN
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4467758189991692890
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,6 +896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: {fileID: 7696526874158117754}
   playerValue: {fileID: 0}
+  tMP_InputField: {fileID: 4676474199905470024}
 --- !u!1 &4843034309557157522
 GameObject:
   m_ObjectHideFlags: 0

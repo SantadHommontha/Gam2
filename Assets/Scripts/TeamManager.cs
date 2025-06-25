@@ -4,27 +4,60 @@ using System.Collections.Generic;
 using System;
 
 [System.Serializable]
-public class SendBackJoinTeam
+public class SetLevelWarpper
 {
+    public SetLevel[] setLevels;
+}
+
+[System.Serializable]
+public class SetLevel
+{
+    public int targetIndex;
+    public int level;
+    public int subLevel;
+}
+
+[System.Serializable]
+public class MyPlayerDataInfo : PlayerData
+{
+    public MyPlayerDataInfo()
+    {
+
+    }
+    public MyPlayerDataInfo(PlayerData _playerdata)
+    {
+        playerID = _playerdata.playerID;
+        teamName = _playerdata.teamName;
+        playerIndex = _playerdata.playerIndex;
+        playerName = _playerdata.playerName;
+    }
     public bool status;
     public string massage;
-    public int playerIndex;
+    public int currentPlayer;
+
+}
+[System.Serializable]
+public class TeamStatus
+{
+    public int playerCount;
 }
 public class TeamManager : MonoBehaviour
 {
     public static TeamManager Instance;
-    public Action<SendBackJoinTeam> ac_sendBackJoinTeam;
+    public Action<MyPlayerDataInfo> ac_sendBackJoinTeam;
     private PhotonView photonView;
     public Team team = new Team();
 
-
+    public int playerCount;
 
 
 
     [Header("Value")]
     [Space]
-    [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
+    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private List<PlayerDisplayerValue> playerDisplayerValues;
+
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -34,7 +67,11 @@ public class TeamManager : MonoBehaviour
 
         photonView = GetComponent<PhotonView>();
     }
-
+    public int PlayerCount()
+    {
+        RequiteTeamStatus();
+        return playerCount;
+    }
     void Start()
     {
         //  DontDestroyOnLoad(this.gameObject);
@@ -53,15 +90,25 @@ public class TeamManager : MonoBehaviour
     {
         PlayerData playerData = JsonUtility.FromJson<PlayerData>(_playerDataJson);
         playerData.info = _info;
-        SendBackJoinTeam sendBackJoinTeam = new SendBackJoinTeam();
+        MyPlayerDataInfo sendBackJoinTeam = new MyPlayerDataInfo();
 
-        if (team.TryToAddPlayer(playerData))
+        if (team.CanAddPlayere(playerData))
         {
             var ap = team.GetAllPlayer();
 
+
+            int _index = ap.Count + 1;
+            playerData.playerIndex = _index;
+
             sendBackJoinTeam.status = true;
             sendBackJoinTeam.massage = "Join Team";
-            sendBackJoinTeam.playerIndex = ap.Count;
+            sendBackJoinTeam.playerIndex = _index;
+            sendBackJoinTeam.playerID = playerData.playerID;
+            sendBackJoinTeam.playerName = playerData.playerName;
+            team.AddPlayer(playerData);
+            var pc = team.GetAllPlayer().Count;
+            sendBackJoinTeam.currentPlayer = team.GetAllPlayer().Count;
+            //  playerCount = team.GetAllPlayer().Count;
             //   Debug.Log("Ap: " + ap.Count);
 
         }
@@ -74,17 +121,62 @@ public class TeamManager : MonoBehaviour
 
         photonView.RPC("RPC_ReciveJoinTeamStatus", _info.Sender, JsonUtility.ToJson(sendBackJoinTeam));
 
-    }
+        var allP = team.GetAllPlayer();
+        Debug.Log($"EIEI {allP.Count}");
+        SetLevel[] setLevels = new SetLevel[allP.Count];
 
+        for (int i = 0; i < allP.Count; i++)
+        {
+            Debug.Log("----------------");
+            setLevels[i] = new SetLevel();
+            if (allP.Count == 1)
+            {
+
+                setLevels[i].targetIndex = i + 1;
+                setLevels[i].level = 0;
+                setLevels[i].subLevel = 0;
+            }
+            else
+            {
+
+                setLevels[i].targetIndex = i + 1;
+                setLevels[i].level = i == allP.Count - 1 ? 3 : i +1;
+                setLevels[i].subLevel = 0;
+            }
+
+        }
+
+        SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
+        setLevelWarpper.setLevels = setLevels;
+        string jsonData = JsonUtility.ToJson(setLevelWarpper);
+        Debug.Log($"Send JsonData: {jsonData}");
+        photonView.RPC("RPC_PlayerChange", RpcTarget.All, jsonData);
+    }
+    [PunRPC]
+    private void RPC_PlayerChange(string _jsonData)
+    {
+        Debug.Log($"Recive JsonData: {_jsonData}");
+        SetLevelWarpper setLevelWarpper = JsonUtility.FromJson<SetLevelWarpper>(_jsonData);
+        foreach (var T in setLevelWarpper.setLevels)
+        {
+            if (T.targetIndex == myPlayerDataInfo.Value.playerIndex)
+            {
+                Debug.Log($"SetLevel: {T.level} {T.subLevel}");
+                GameManager.Instance.SetMyLevel(T.level, T.subLevel);
+            }
+        }
+        // GameManager.Instance.StartState(GameState.Wait);
+    }
     [PunRPC]
     private void RPC_ReciveJoinTeamStatus(string _statusJson)
     {
-        SendBackJoinTeam sendBackJoinTeam = JsonUtility.FromJson<SendBackJoinTeam>(_statusJson);
+        MyPlayerDataInfo sendBackJoinTeam = JsonUtility.FromJson<MyPlayerDataInfo>(_statusJson);
         //  Debug.Log("ApF: " + sendBackJoinTeam.playerIndex);
         //  IReciveJoinTeams[0].ReciveJoinTeamStatus(sendBackJoinTeam);
 
 
-        sendBackJoinTeamValue.Value = sendBackJoinTeam;
+        myPlayerDataInfo.Value = sendBackJoinTeam;
+        playerCount = sendBackJoinTeam.currentPlayer;
         // if (sendBackJoinTeam.status)
         //     {
         //         GameManager.Instance.playerIndex = sendBackJoinTeam.playerIndex;
@@ -158,4 +250,52 @@ public class TeamManager : MonoBehaviour
         }
 
     }
+
+
+    public void ChangePlayerIndex(string _playerID, int _newIndex)
+    {
+        var player = team.GetPlayerByID(_playerID);
+
+        player.playerIndex = _newIndex;
+
+        MyPlayerDataInfo myPlayerDataInfo = new MyPlayerDataInfo(player);
+        myPlayerDataInfo.playerIndex = player.playerIndex;
+        myPlayerDataInfo.status = true;
+
+        photonView.RPC("RPC_ReciveJoinTeamStatus", player.info.Sender, JsonUtility.ToJson(myPlayerDataInfo));
+
+    }
+    [PunRPC]
+    public void RPC_ChangePlayerIndex(string _jsonData)
+    {
+        MyPlayerDataInfo myPlayerDataInfo = JsonUtility.FromJson<MyPlayerDataInfo>(_jsonData);
+
+
+    }
+
+    public void RequiteTeamStatus()
+    {
+        photonView.RPC("RPC_TeamStatus", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void RPC_TeamStatus(PhotonMessageInfo _info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            TeamStatus teamStatus = new TeamStatus();
+            teamStatus.playerCount = team.DataCount;
+
+            photonView.RPC("RPC_ReiveTeamStatus", _info.Sender, JsonUtility.ToJson(teamStatus));
+        }
+
+    }
+    [PunRPC]
+    private void RPC_ReiveTeamStatus(string _jsonData)
+    {
+        TeamStatus teamStatus = JsonUtility.FromJson<TeamStatus>(_jsonData);
+
+        playerCount = teamStatus.playerCount;
+    }
+
 }

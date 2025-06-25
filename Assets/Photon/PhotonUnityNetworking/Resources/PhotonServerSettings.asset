@@ -48,6 +48,11 @@ MonoBehaviour:
   - RPC_ReciveSCore
   - RPC_LEaveRoom
   - RPC_GameData
+  - RPC_SetPlayerIndex
+  - RPC_ChangePlayerIndex
+  - RPC_PlayerChange
+  - RPC_TeamStatus
+  - RPC_ReiveTeamStatus
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

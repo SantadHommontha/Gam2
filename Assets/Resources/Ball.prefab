@@ -174,6 +174,7 @@ MonoBehaviour:
   ball: {fileID: 3514205473754882231}
   photonView: {fileID: 2301562080628136443}
   ballID: 
+  myPlayerDataInfo: {fileID: 11400000, guid: 3a7e40e874090f24b90529310c860735, type: 2}
   isSet: 1
 --- !u!114 &2301562080628136443
 MonoBehaviour:

@@ -12,7 +12,7 @@ public class PlayerNameUI : MonoBehaviour
     [Header("Value")]
     [Space]
     [SerializeField] private StringValue value_playerName;
-    [SerializeField] private SendBackJoinTeamValue sendBackJoinTeamValue;
+    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
 
     void Start()
     {

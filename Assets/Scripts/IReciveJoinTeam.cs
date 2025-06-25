@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IReciveJoinTeam
 {
-    public void ReciveJoinTeamStatus(SendBackJoinTeam _sendBackJoinTeam);
+    public void ReciveJoinTeamStatus(MyPlayerDataInfo _myPlayerDataInfo);
 }
