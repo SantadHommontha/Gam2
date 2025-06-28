@@ -53,6 +53,7 @@ MonoBehaviour:
   - RPC_PlayerChange
   - RPC_TeamStatus
   - RPC_ReiveTeamStatus
+  - RPC_ResetGame
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

@@ -5,20 +5,12 @@ public class GameTimer : MonoBehaviour
 {
     [SerializeField][TextArea] protected string description;
     [SerializeField] protected float time;
-    // public float TIME
-    // {
-    //     get
-    //     {
-    //         if (gameTime != null)
-    //             return gameTime.Value;
-    //         else
-    //             return time;
-    //     }
-    // }
+    [SerializeField] private float fetchTimer = 1f;
     public float timer;
     protected Coroutine coroutineTimeUpdate;
     [Header("Value")]
-    [SerializeField] private FloatValue gametimer;
+    //[SerializeField] private FloatValue gametimer;
+    [SerializeField] private GameDataValue gamedata;
     [Header("Event")]
     [SerializeField] protected GameEvent timerUpdateEvent;
 
@@ -41,17 +33,6 @@ public class GameTimer : MonoBehaviour
         coroutineTimeUpdate = null;
     }
 
-
-    // protected virtual void StartTimeCount()
-    // {
-
-    //     if (coroutineTimeUpdate != null)
-    //         StopCoroutine(coroutineTimeUpdate);
-    //     // timer = TIME;
-    //     coroutineTimeUpdate = StartCoroutine(GameTimerUpdate(gameTime.Value));
-
-
-    // }
     protected virtual IEnumerator GameTimerUpdate(float _gameTime)
     {
         timer = _gameTime;
@@ -59,12 +40,13 @@ public class GameTimer : MonoBehaviour
         {
             if (timerUpdateEvent)
                 timerUpdateEvent.Raise(this, timer);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(fetchTimer);
             if (timerUpdateEvent)
                 timerUpdateEvent.Raise(this, timer);
 
-            timer--;
-            gametimer.Value = timer;
+            timer -= fetchTimer;
+            gamedata.Value.gametimer = timer;
+            gamedata.Value.usetime += fetchTimer;
         }
         if (timerUpdateEvent)
             timerUpdateEvent.Raise(this, timer);

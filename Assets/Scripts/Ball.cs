@@ -49,7 +49,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     private PhotonView photonView;
 
     [Header("Value")]
-    [SerializeField] private BoolValue gameStart;
+    [SerializeField] private GameDataValue gameData;
 
     void Awake()
     {
@@ -64,7 +64,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     // Update is called once per frame
     void Update()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         if (isClick)
         {
             CalculateOpposite();
@@ -98,7 +98,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     private void TouchInput()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         if (Input.touchCount > 0)
         {
             // วนลูปผ่าน Touch ทั้งหมดที่กำลังใช้งานอยู่
@@ -150,7 +150,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void FixedUpdate()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         if (shot)
         {
             shot = false;
@@ -193,7 +193,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void OnMouseDown()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         isClick = true;
     }
 

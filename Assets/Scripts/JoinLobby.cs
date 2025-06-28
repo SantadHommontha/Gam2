@@ -4,12 +4,20 @@ using UnityEngine.SceneManagement;
 
 public class JoinLobby : MonoBehaviourPunCallbacks
 {
-    
+
     void Start()
     {
         // PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
-        PhotonNetwork.ConnectUsingSettings();
-        Debug.Log("Connect To Server");
+
+        if (PhotonNetwork.IsConnected)
+        {
+            SceneManager.LoadScene("Lobby");
+        }
+        else
+        {
+            Debug.Log("Connecting To Server");
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
 
 
@@ -26,7 +34,7 @@ public class JoinLobby : MonoBehaviourPunCallbacks
 
     }
 
-   
+
 
 
 }

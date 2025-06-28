@@ -3,7 +3,7 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 
 public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 {
@@ -14,8 +14,9 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField roomName;
 
     [Header("Value")]
-    [SerializeField] private StringValue roomname_value;
-    [SerializeField] private BoolValue iamAdmin;
+    [SerializeField] private GameDataValue gameData;
+    //[SerializeField] private StringValue roomname_value;
+    // [SerializeField] private BoolValue iamAdmin;
     [SerializeField] private StringValue adminCode_value;
 
     void Awake()
@@ -26,13 +27,13 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         //  PhotonNetwork.JoinOrCreateRoom("Mine", null, null);
-        Debug.Log("CCC");
+        //  Debug.Log("CCC");
         ChangeMeassge("Create Room");
-        roomname_value.Value = GenerateCode.GenerateRandomCode().ToLower();
+        gameData.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
-        iamAdmin.Value = true;
-        PhotonNetwork.CreateRoom(roomname_value.Value,roomOptions,TypedLobby.Default);
+        gameData.Value.iamAdmin = true;
+        PhotonNetwork.CreateRoom(gameData.Value.roomCode, roomOptions, TypedLobby.Default);
     }
     private void ChangeMeassge(string _text = "")
     {
@@ -44,6 +45,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 
         // PhotonNetwork.IsMessageQueueRunning = false;
         ChangeMeassge("Join Room");
+        gameData.Value.iamAdmin = false;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
 
     }
@@ -79,5 +81,14 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(3f);
         ChangeMeassge();
+    }
+    public void BackBtn()
+    {
+
+
+        SceneManager.LoadScene("Loading");
+
+
+
     }
 }

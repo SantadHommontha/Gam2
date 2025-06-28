@@ -30,12 +30,9 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     {
         if (photonView.IsMine)
         {
-
             ShowBall();
             if (!isSet)
             {
-
-
                 ball.canTrigger = true;
                 float yPos = ballDataWapper.up ? -4.3f : 6.7f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
@@ -64,7 +61,6 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     }
 
 
-
     public void TakeBvall(bool _up)
     {
         ball.canTrigger = false;
@@ -76,10 +72,10 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         ballDataWapper.yPosition = ball.transform.position.y;
         ballDataWapper.xVelocity = ball.rb.linearVelocityX;
         ballDataWapper.yVelocity = ball.rb.linearVelocityY;
-        //  Debug.Log($"Velocity Send :{new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity)}");
+      
         string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-        //  Debug.Log("Send Ball To " + ballDataWapper.nextPLayerIndex);
-
+       
+        Debug.Log($"send ball to: {ballDataWapper.nextPLayerIndex}");
         HideBall();
         photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
     }
@@ -95,7 +91,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         if (ballDataWapper.nextPLayerIndex == myPlayerDataInfo.Value.playerIndex)
 
         {
-            Debug.Log("I Am");
+        //    Debug.Log("I Am");
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
@@ -14,12 +15,12 @@ public class SpawnBall : MonoBehaviour
 
     private bool isClick;
 
-
+    [SerializeField] private List<BallHandle> ballList = new List<BallHandle>();
     private Vector3 direction;
     private float distance;
 
     [Header("Value")]
-    [SerializeField] private BoolValue gameStart;
+    [SerializeField] private GameDataValue gameData;
     void Awake()
     {
 
@@ -29,7 +30,7 @@ public class SpawnBall : MonoBehaviour
     }
     void OnEnable()
     {
-          Instance = this;
+        Instance = this;
     }
     void Start()
     {
@@ -37,13 +38,13 @@ public class SpawnBall : MonoBehaviour
     }
     void OnMouseDown()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         isClick = true;
     }
     // Update is called once per frame
     void Update()
     {
-        if (!gameStart.Value) return;
+        if (!gameData.Value.gamestart) return;
         if (Input.GetKeyDown(KeyCode.S))
         {
 
@@ -84,13 +85,31 @@ public class SpawnBall : MonoBehaviour
             ball = Instantiate(prefap, spawnPosition.position, Quaternion.identity);
         }
         var ballHandle = ball.GetComponent<BallHandle>();
-
+        ballList.Add(ballHandle);
         ballHandle.AddForce(direction, force);
 
 
 
     }
 
+    public void RemoveAllBall()
+    {
+        var ballcount = ballList.Count;
 
+        for (int i = 0; i < ballcount; i++)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.Destroy(ballList[0].gameObject);
+
+            }
+            else
+            {
+                Destroy(ballList[0].gameObject);
+            }
+
+            ballList.RemoveAt(0);
+        }
+    }
 
 }

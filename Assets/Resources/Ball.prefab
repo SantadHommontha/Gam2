@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: f224bfd122877a34aa49c63693fc317b, type: 3}
   m_Color: {r: 0.9716981, g: 0.21826379, b: 0.03208439, a: 1}
   m_FlipX: 0
@@ -276,7 +276,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0.7881213, b: 0.4669811, a: 1}
   m_FlipX: 0
@@ -374,4 +374,4 @@ MonoBehaviour:
   oppositeDirection: {x: 0, y: 0}
   ballID: 
   ballHandle: {fileID: 3612451343537771076}
-  gameStart: {fileID: 11400000, guid: bfc95f583a6ca06409e20095d2d3cb22, type: 2}
+  gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
