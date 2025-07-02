@@ -59,6 +59,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     void Start()
     {
         //  GameManager.Instance.ball = this;
+        TARGET.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -95,6 +96,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         Vector2 forceVector = _direction * _force;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(forceVector, _forceMode2D);
+        TARGET.gameObject.SetActive(false);
     }
     private void TouchInput()
     {
@@ -190,6 +192,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         this.force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
 
         TARGET.position = transform.position + oppositeDirection;
+        TARGET.gameObject.SetActive(true);
     }
     void OnMouseDown()
     {

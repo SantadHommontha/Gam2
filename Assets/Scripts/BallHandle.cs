@@ -72,17 +72,17 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         ballDataWapper.yPosition = ball.transform.position.y;
         ballDataWapper.xVelocity = ball.rb.linearVelocityX;
         ballDataWapper.yVelocity = ball.rb.linearVelocityY;
-      
+
         string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-       
+
         Debug.Log($"send ball to: {ballDataWapper.nextPLayerIndex}");
-        HideBall();
         photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
+
     }
 
 
     [PunRPC]
-    private void RPC_TakeBall(string _BallDataJson)
+    private void RPC_TakeBall(string _BallDataJson, PhotonMessageInfo _info)
     {
 
         ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
@@ -91,10 +91,10 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         if (ballDataWapper.nextPLayerIndex == myPlayerDataInfo.Value.playerIndex)
 
         {
-        //    Debug.Log("I Am");
+            //    Debug.Log("I Am");
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
-
+            photonView.RPC("RPC_ReciveTakeBall", _info.Sender);
             // if (photonView.IsMine)
             // {
             //     Debug.Log("Is Mine");
@@ -107,10 +107,15 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
             //     StartCoroutine(Cooldown());
             // }
 
+
         }
 
     }
-
+    [PunRPC]
+    private void RPC_ReciveTakeBall()
+    {
+        HideBall();
+    }
     IEnumerator Cooldown(float _time = 1)
     {
         yield return new WaitForSeconds(_time);
@@ -123,7 +128,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         PhotonNetwork.Destroy(this.gameObject);
     }
 
-     public void OnPhotonInstantiate(PhotonMessageInfo info)
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)
         {
