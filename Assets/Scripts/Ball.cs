@@ -33,6 +33,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
     public bool canTrigger = true;
 
+
     // Touch
     private Vector2 startTouchPosition;
     private Vector2 currentTouchPosition;
