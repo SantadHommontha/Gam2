@@ -17,6 +17,7 @@ public class GameDataWapper
 [System.Serializable]
 public class GameData
 {
+
     public int gamescore;
     public float gametimer;
     public float usetime;
@@ -24,7 +25,17 @@ public class GameData
     public bool iamAdmin;
     public string roomCode;
     public bool spacetator;
-
+    public GameData() { }
+    public GameData(GameData _gameData)
+    {
+        gamescore = _gameData.gamescore;
+        gametimer = _gameData.gametimer;
+        usetime = _gameData.usetime;
+        gamestart = _gameData.gamestart;
+        iamAdmin = _gameData.iamAdmin;
+        roomCode = _gameData.roomCode;
+        spacetator = _gameData.spacetator;
+    }
 }
 
 public enum GameState
@@ -184,21 +195,22 @@ public class GameManager : MonoBehaviour
                 Scene_Game_All_UI.Instance.playerIndex.SetActive(false);
 
                 Scene_Game_All_UI.Instance.backbtn.SetActive(true);
+                gameOver.Raise(this);
                 if (PhotonNetwork.IsMasterClient)
                 {
                     Scene_Game_All_UI.Instance.backBtn_text.text = "Back";
+                    SpawnBall.Instance.RemoveAllBall();
                 }
                 else
                 {
                     Scene_Game_All_UI.Instance.backBtn_text.text = "Leave";
                 }
 
-                SpawnBall.Instance.RemoveAllBall();
+
                 gameTimer.StopTimer();
                 gameData.Value.gamestart = false;
 
 
-                gameOver.Raise(this);
                 break;
         }
     }
@@ -280,7 +292,7 @@ public class GameManager : MonoBehaviour
             StartState(GameState.SetGame);
         
 #endif
-       
+
         // if (isPlayer)
         // {
         //     StartState(GameState.EnterName);
@@ -301,7 +313,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         ui_playerIndex.text = $"Player {myPlayerDataInfo.Value.playerIndex.ToString()} :: {gameData.Value.iamAdmin.ToString()}";
-        
+
         // if (playerIndex > 1)
         //     bottomLevel.SetActive(false);
         UpdateState();
@@ -439,6 +451,30 @@ public class GameManager : MonoBehaviour
 
                 break;
         }
+
+    }
+
+
+
+
+
+
+
+
+    public void ChangeGameDataSetting()
+    {
+        var gameData = new GameData(this.gameData.Value);
+
+        var jsonData = JsonUtility.ToJson(gameData);
+        photonView.RPC("RPC_ChangeGameData", RpcTarget.Others, jsonData);
+    }
+
+    [PunRPC]
+    private void RPC_ChangeGameData(string _jsonData)
+    {
+        this.gameData.Value = JsonUtility.FromJson<GameData>(_jsonData);
+
+
 
     }
 }

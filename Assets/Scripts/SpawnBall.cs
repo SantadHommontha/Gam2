@@ -100,6 +100,7 @@ public class SpawnBall : MonoBehaviour
         {
             if (PhotonNetwork.InRoom)
             {
+                ballList[0].TranferOwner();
                 PhotonNetwork.Destroy(ballList[0].gameObject);
 
             }

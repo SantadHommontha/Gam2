@@ -21,7 +21,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     private void ShowBall()
     {
         ball.gameObject.SetActive(true);
-        ball.TARGET.gameObject.SetActive(true);
+        //  ball.TARGET.gameObject.SetActive(true);
     }
 
     public bool isSet = true;
@@ -80,7 +80,14 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
 
     }
 
-
+    public void TranferOwner(Photon.Realtime.Player _player)
+    {
+        photonView.TransferOwnership(_player);
+    }
+    public void TranferOwner()
+    {
+        photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+    }
     [PunRPC]
     private void RPC_TakeBall(string _BallDataJson, PhotonMessageInfo _info)
     {
@@ -124,7 +131,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnTouchEndPoint()
     {
-        //  HideBall();
+        HideBall();
         PhotonNetwork.Destroy(this.gameObject);
     }
 

@@ -16,10 +16,16 @@ MonoBehaviour:
   value:
     gamescore: 0
     gametimer: 0
-    gamestart: 0
+    usetime: 0
+    gamestart: 1
     iamAdmin: 0
+    roomCode: 
+    spacetator: 0
   initialValue:
     gamescore: 0
     gametimer: 0
+    usetime: 0
     gamestart: 0
     iamAdmin: 0
+    roomCode: 
+    spacetator: 0

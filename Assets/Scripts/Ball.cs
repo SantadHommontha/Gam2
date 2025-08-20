@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 [System.Serializable]
 public class BallDataWapper
@@ -45,8 +46,25 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     public Vector2 DragDirection => dragDirection;
     public Vector2 OppositeDirection => oppositeDirection;
     public string ballID;
+
     public BallHandle ballHandle;
     private PhotonView photonView;
+
+    [Header("Ground")]
+
+    public bool isGround;
+    public Transform groundCheckPoint;
+
+    public float groundCheckDistance = 0.2f;
+
+    public LayerMask groundLayer;
+    // สำหรับแสดง Raycast ใน Scene View เพื่อ Debug
+    public bool showDebugRay = true;
+    public Color debugRayColor = Color.green;
+    [Header("Animation Sprite")]
+    [SerializeField] private PlayAnimationSprite OnshootBallAnimation;
+    [SerializeField] private PlayAnimationSprite OnFailAnimation;
+    [SerializeField] private PlayAnimationSprite OnHitGroundAnimation;
 
     [Header("Value")]
     [SerializeField] private GameDataValue gameData;
@@ -55,6 +73,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     {
         rb = GetComponent<Rigidbody2D>();
         photonView = ballHandle.photonView;
+
     }
     void Start()
     {
@@ -82,7 +101,14 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         // {
         //     Debug.Log("FFFF");
         //     // TakeBvall();
-        // }
+        // 
+        isGround = IsGrounded2D();
+        if (isGround)
+        {
+
+            OnBallHitGround();
+
+        }
 
     }
     private void AddForce(Vector2 _direction, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
@@ -157,6 +183,12 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         {
             shot = false;
             AddForce(oppositeDirection, force);
+            OnShootBall();
+        }
+
+        if (rb.linearVelocityY < 0)
+        {
+            OnBallFail();
         }
     }
     void OnMouseDrag()
@@ -255,9 +287,26 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         return false;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    // void OnTriggerEnter2D(Collider2D collision)
+    // {
+    //     Debug.Log($"Trigger: " + collision.gameObject.name);
+    //     if (!canTrigger) return;
+    //     if (collision.TryGetComponent<PassWay>(out var way))
+    //     {
+    //         if (way.up && rb.linearVelocityY > 0)
+    //         {
+    //             ballHandle.TakeBvall(true);
+    //         }
+    //         else if (!way.up && rb.linearVelocityY < 0)
+    //         {
+    //             ballHandle.TakeBvall(false);
+    //         }
+    //     }
+
+
+    // }
+    void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log($"Trigger: " + collision.gameObject.name);
         if (!canTrigger) return;
         if (collision.TryGetComponent<PassWay>(out var way))
         {
@@ -283,4 +332,111 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             ballID = id;
         }
     }
+
+
+
+    private void CheckGround()
+    {
+
+    }
+
+    /// <summary>
+    /// ฟังก์ชันสำหรับเช็คว่า GameObject อยู่บนพื้นหรือไม่ (2D)
+    /// </summary>
+    /// <returns>True ถ้า Raycast ชนกับ Layer พื้นที่กำหนด, False ถ้าไม่ชน</returns>
+    public bool IsGrounded2D()
+    {
+
+        if (groundCheckPoint == null)
+        {
+            Debug.LogWarning("Ground Check Point is not assigned. Cannot perform ground check.", this);
+            return false;
+        }
+
+        // ยิง Raycast ลงมาจาก groundCheckPoint
+        RaycastHit2D hit = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
+
+        // วาด Raycast เพื่อ Debug ใน Scene View (จะเห็นเมื่อ Show Debug Ray เป็น true)
+        if (showDebugRay)
+        {
+            Debug.DrawRay(groundCheckPoint.position, Vector2.down * groundCheckDistance, hit.collider != null ? debugRayColor : Color.red);
+        }
+
+        // ถ้า Raycast ชนกับ Collider ใดๆ ใน Layer ที่กำหนด
+        if (hit.collider != null)
+        {
+            // สามารถเพิ่มเงื่อนไขอื่นๆ ได้ที่นี่ เช่น เช็ค Tag หรือ Component
+            // if (hit.collider.CompareTag("Ground")) { return true; }
+            return true;
+        }
+        return false;
+    }
+    void OnDrawGizmos()
+    {
+        if (showDebugRay && !groundCheckPoint)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(groundCheckPoint.position, groundCheckPoint.position + (Vector3.down * groundCheckDistance));
+        }
+    }
+    public void OnShootBall()
+    {
+        //  Debug.Log("OnShootBall");
+        if (OnshootBallAnimation)
+        {
+            OnFailAnimation.Stop();
+            OnHitGroundAnimation.Stop();
+            OnshootBallAnimation.Play();
+            Debug.Log("Play Shoot Ball Animation");
+        }
+        else
+            Debug.Log("No Shoot Ball Animation");
+    }
+
+    public void OnBallFail()
+    {
+
+        //  Debug.Log("OnBallFail");
+        if (OnFailAnimation)
+        {
+            if (OnFailAnimation.currentState != PlayAnimationSprite.AnimationState.Playing)
+            {
+                OnshootBallAnimation.Stop();
+                OnHitGroundAnimation.Stop();
+                OnFailAnimation.Play();
+                Debug.Log("Play Fail Ball Animation");
+            }
+        }
+        else
+            Debug.Log("No Fail Ball Animation");
+    }
+
+    public void OnBallHitGround()
+
+    {
+
+        // Debug.Log("OnBallHitGround");
+        if (OnHitGroundAnimation)
+        {
+            if (OnHitGroundAnimation.currentState != PlayAnimationSprite.AnimationState.Playing)
+            {
+                OnshootBallAnimation.Stop();
+                OnFailAnimation.Stop();
+                OnHitGroundAnimation.Play();
+                Debug.Log("Play Hit Ground Animation");
+            }
+
+        }
+
+        else
+            Debug.Log("No Hit Ground Animation");
+    }
+
+
+
+
+
+
+
+
 }
