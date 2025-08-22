@@ -5,6 +5,7 @@ using Photon.Realtime;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+
 public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 {
     [SerializeField] private int maxPlayer = 3;
@@ -15,6 +16,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 
     [Header("Value")]
     [SerializeField] private GameDataValue gameData;
+    [SerializeField] private BoolValue isPlayer;
     //[SerializeField] private StringValue roomname_value;
     // [SerializeField] private BoolValue iamAdmin;
     [SerializeField] private StringValue adminCode_value;
@@ -45,6 +47,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 
         // PhotonNetwork.IsMessageQueueRunning = false;
         ChangeMeassge("Join Room");
+        isPlayer.Value = true;
         gameData.Value.iamAdmin = false;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
 
@@ -53,9 +56,23 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     public void JoinBTN()
     {
         if (roomName.text.ToLower() == adminCode_value.Value.ToLower())
+        {
+            Debug.Log("11111");
             CreateRoom();
+        }
+        else if (roomName.text.ToLower() == "onionplayer")
+        {
+            isPlayer.Value = true;
+            Debug.Log("2222");
+            CreateRoom();
+        }
         else
+        {
+            Debug.Log("333 + " + roomName.text.ToLower());
             JoinRoom();
+        }
+
+
 
     }
     public override void OnCreatedRoom()

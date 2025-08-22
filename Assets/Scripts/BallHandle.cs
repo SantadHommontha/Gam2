@@ -8,6 +8,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     public string ballID;
     private BallDataWapper ballDataWapper = new BallDataWapper();
     [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    private bool gotShoot = true;
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
@@ -17,10 +18,12 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     {
         ball.gameObject.SetActive(false);
         ball.TARGET.gameObject.SetActive(false);
+        Debug.Log("Hide Ball");
     }
     private void ShowBall()
     {
         ball.gameObject.SetActive(true);
+        Debug.Log("Show Ball");
         //  ball.TARGET.gameObject.SetActive(true);
     }
 
@@ -28,6 +31,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
 
     private void CheckCurrentBallIndex()
     {
+      //  if (!gotShoot) return;
         if (photonView.IsMine)
         {
             ShowBall();
@@ -59,7 +63,19 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     {
         ball.AddForce(_direction, _force);
     }
+    public void GotShoot()
+    {
+        gotShoot = true;
+        ShowBall();
+        
+        StartCoroutine(GotshootCooldown());
+    }
 
+    private IEnumerator GotshootCooldown()
+    {
+        yield return new WaitForSeconds(1);
+        gotShoot = false;
+    }
 
     public void TakeBvall(bool _up)
     {

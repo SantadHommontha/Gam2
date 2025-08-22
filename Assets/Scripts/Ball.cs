@@ -69,6 +69,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
     [Header("Value")]
     [SerializeField] private GameDataValue gameData;
+    [SerializeField] private BoolValue isPlayer;
 
     void Awake()
     {
@@ -180,8 +181,10 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     void FixedUpdate()
     {
         if (!gameData.Value.gamestart) return;
+        if (!isPlayer.Value) return;
         if (shot)
         {
+
             shot = false;
             AddForce(oppositeDirection, force);
             OnShootBall();
@@ -194,6 +197,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void OnMouseDrag()
     {
+        if (!isPlayer.Value) return;
         if (isClick)
         {
             CalculateOpposite();

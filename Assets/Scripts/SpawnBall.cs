@@ -8,8 +8,8 @@ public class SpawnBall : MonoBehaviour
     [SerializeField] private GameObject prefap;
     [SerializeField] private Transform spawnPosition;
     [SerializeField] private Transform targetr;
-    [SerializeField] private float distanceToMaxForec = 1;
-    [SerializeField] private float maxForce = 5f;
+    [SerializeField] private float distanceToMaxForec = 0.5f;
+    [SerializeField] private float maxForce = 10f;
     private float force;
     private PhotonView photonView;
 
@@ -78,7 +78,6 @@ public class SpawnBall : MonoBehaviour
         if (PhotonNetwork.InRoom)
         {
             ball = PhotonNetwork.Instantiate(prefap.name, spawnPosition.position, Quaternion.identity, 0, data);
-
         }
         else
         {
@@ -87,6 +86,7 @@ public class SpawnBall : MonoBehaviour
         var ballHandle = ball.GetComponent<BallHandle>();
         ballList.Add(ballHandle);
         ballHandle.AddForce(direction, force);
+        ballHandle.GotShoot();
 
 
 

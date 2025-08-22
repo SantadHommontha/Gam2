@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     [Header("Value")]
     [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private GameDataValue gameData;
+    [SerializeField] private BoolValue isPlayerValue;
 
 
 
@@ -273,25 +274,25 @@ public class GameManager : MonoBehaviour
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
-#if UNITY_EDITOR
+        // #if UNITY_EDITOR
 
-        if (isPlayer)
-        {
-            StartState(GameState.EnterName);
-        }
-        else
-        {
-            StartState(GameState.SetGame);
-        }
+        //         if (isPlayer)
+        //         {
+        //             StartState(GameState.EnterName);
+        //         }
+        //         else
+        //         {
+        //             StartState(GameState.SetGame);
+        //         }
 
-#else
-         
- if (!gameData.Value.iamAdmin)
-            StartState(GameState.EnterName);
-        else
-            StartState(GameState.SetGame);
-        
-#endif
+        // #else
+
+        //  if (!gameData.Value.iamAdmin)
+        //             StartState(GameState.EnterName);
+        //         else
+        //             StartState(GameState.SetGame);
+
+        // #endif
 
         // if (isPlayer)
         // {
@@ -304,7 +305,19 @@ public class GameManager : MonoBehaviour
         //     else
         //         StartState(GameState.SetGame);
         // }
+        if (gameData.Value.iamAdmin)
+        {
+            if (isPlayerValue.Value)
+                StartState(GameState.EnterName);
+            else
+                StartState(GameState.SetGame);
 
+
+        }
+        else
+        {
+            StartState(GameState.EnterName);
+        }
         myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
@@ -312,7 +325,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ui_playerIndex.text = $"Player {myPlayerDataInfo.Value.playerIndex.ToString()} :: {gameData.Value.iamAdmin.ToString()}";
+        ui_playerIndex.text = $"Player {myPlayerDataInfo.Value.playerIndex.ToString()}";
 
         // if (playerIndex > 1)
         //     bottomLevel.SetActive(false);

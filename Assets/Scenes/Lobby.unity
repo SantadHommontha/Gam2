@@ -154,6 +154,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e006786afbb8f8d47a60872b8e212514, type: 2}
   - {fileID: 11400000, guid: e006786afbb8f8d47a60872b8e212514, type: 2}
   - {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
+  - {fileID: 11400000, guid: 820769079f4ed584eb6a28b1b4682a2d, type: 2}
 --- !u!4 &191723160
 Transform:
   m_ObjectHideFlags: 0
@@ -228,8 +229,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Room Code
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
-  m_sharedMaterial: {fileID: 641322888735700764, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -495,8 +496,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
-  m_sharedMaterial: {fileID: 641322888735700764, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -885,8 +886,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Back
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
-  m_sharedMaterial: {fileID: 641322888735700764, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1174,6 +1175,7 @@ GameObject:
   - component: {fileID: 1387548407}
   - component: {fileID: 1387548406}
   - component: {fileID: 1387548405}
+  - component: {fileID: 1387548408}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1255,6 +1257,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1387548408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387548404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &1499568991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,6 +1334,7 @@ MonoBehaviour:
   meassge: {fileID: 1718643848}
   roomName: {fileID: 1877667506}
   gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
+  isPlayer: {fileID: 11400000, guid: 820769079f4ed584eb6a28b1b4682a2d, type: 2}
   adminCode_value: {fileID: 11400000, guid: 8e0594478dc2da145b67a183cc49a5dd, type: 2}
 --- !u!4 &1499568993
 Transform:
@@ -1581,7 +1628,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.39999962}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1699889932
@@ -1626,8 +1673,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Room Code...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
-  m_sharedMaterial: {fileID: 641322888735700764, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1830,8 +1877,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2134,8 +2181,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Join
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
-  m_sharedMaterial: {fileID: 641322888735700764, guid: 5ad8e70df1ffe694081bd86e1be920fd, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
+  m_sharedMaterial: {fileID: 3047293935025112515, guid: 2409f952a6eb6f645a064c6062253d93, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
