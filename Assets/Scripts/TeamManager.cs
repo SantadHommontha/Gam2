@@ -122,12 +122,12 @@ public class TeamManager : MonoBehaviour
         photonView.RPC("RPC_ReciveJoinTeamStatus", _info.Sender, JsonUtility.ToJson(sendBackJoinTeam));
 
         var allP = team.GetAllPlayer();
-        Debug.Log($"EIEI {allP.Count}");
+        //Debug.Log($"EIEI {allP.Count}");
         SetLevel[] setLevels = new SetLevel[allP.Count];
 
         for (int i = 0; i < allP.Count; i++)
         {
-            Debug.Log("----------------");
+          //  Debug.Log("----------------");
             setLevels[i] = new SetLevel();
             if (allP.Count == 1)
             {
@@ -149,7 +149,7 @@ public class TeamManager : MonoBehaviour
         SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
         setLevelWarpper.setLevels = setLevels;
         string jsonData = JsonUtility.ToJson(setLevelWarpper);
-        Debug.Log($"Send JsonData: {jsonData}");
+      //  Debug.Log($"Send JsonData: {jsonData}");
         photonView.RPC("RPC_PlayerChange", RpcTarget.All, jsonData);
     }
     [PunRPC]

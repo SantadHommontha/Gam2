@@ -87,6 +87,7 @@ public class SpawnBall : MonoBehaviour
         ballList.Add(ballHandle);
         ballHandle.AddForce(direction, force);
         ballHandle.GotShoot();
+      
 
 
 

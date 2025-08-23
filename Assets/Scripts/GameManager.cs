@@ -4,6 +4,9 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using Mono.Cecil.Cil;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 
 
 
@@ -55,6 +58,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameState gameState = GameState.None;
     [SerializeField] private GameObject gamgeControl;
+    private int currentBallIndex;
 
     //  public int playerIndex = 0;
     public TMP_InputField tMP_InputField;
@@ -80,9 +84,14 @@ public class GameManager : MonoBehaviour
     [Header("Leavel")]
 
     [SerializeField] private List<GameEvent> level1Player;
+
     [SerializeField] private List<GameEvent> level1;
     [SerializeField] private List<GameEvent> level2;
     [SerializeField] private List<GameEvent> level3;
+    private int solo_index = 0;
+    private int level1_index = 0;
+    private int level2_index = 0;
+    private int level3_index = 0;
 
 
     [Header("Test")]
@@ -156,23 +165,39 @@ public class GameManager : MonoBehaviour
 
                 if (playerCount == 1)
                 {
-                    RamdomLevel(level1Player).Raise(this);
+                    RamdomLevel(level1Player, out level1_index).Raise(this);
+                    SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
                 }
                 else if (playerCount == 2)
                 {
                     if (myPlayerDataInfo.Value.playerIndex == 1)
-                        RamdomLevel(level1).Raise(this);
+                    {
+                        RamdomLevel(level1, out level1_index).Raise(this);
+                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
+                    }
                     else
-                        RamdomLevel(level3).Raise(this);
+                    {
+                        RamdomLevel(level3, out level3_index).Raise(this);
+                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
+                    }
                 }
                 else
                 {
                     if (myPlayerDataInfo.Value.playerIndex == 1)
-                        RamdomLevel(level1).Raise(this);
+                    {
+                        RamdomLevel(level1, out level1_index).Raise(this);
+                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
+                    }
                     else if (myPlayerDataInfo.Value.playerIndex == 2)
-                        RamdomLevel(level2).Raise(this);
+                    {
+                        RamdomLevel(level2, out level2_index).Raise(this);
+                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level2_index);
+                    }
                     else
-                        RamdomLevel(level3).Raise(this);
+                    {
+                        RamdomLevel(level3, out level3_index).Raise(this);
+                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
+                    }
                 }
 
                 wait.Raise(this);
@@ -187,7 +212,10 @@ public class GameManager : MonoBehaviour
                 gameTimer.SetTime(gameSetting.gameTime);
                 gameTimer.StartTimer();
                 if (PhotonNetwork.IsMasterClient)
+                {
                     SendGameData();
+
+                }
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
@@ -334,7 +362,12 @@ public class GameManager : MonoBehaviour
 
     private GameEvent RamdomLevel(List<GameEvent> _gameEvents)
     {
-        return _gameEvents[UnityEngine.Random.Range(0, _gameEvents.Count - 1)];
+        return RamdomLevel(_gameEvents, out int _index);
+    }
+    private GameEvent RamdomLevel(List<GameEvent> _gameEvents, out int _index)
+    {
+        _index = UnityEngine.Random.Range(0, _gameEvents.Count - 1);
+        return _gameEvents[_index];
     }
 
 
@@ -489,5 +522,68 @@ public class GameManager : MonoBehaviour
 
 
 
+    }
+
+    public void SentMyLevelIndex(int _myIndex, int _levelIndex)
+    {
+        int[] index = { _myIndex, _levelIndex };
+        photonView.RPC("RPC_SentMyLevelIndex", RpcTarget.MasterClient, index);
+    }
+    [PunRPC]
+    private void RPC_SentMyLevelIndex(int[] _index)
+    {
+        int _myIndex = _index[0];
+        int _levelIndex = _index[1];
+
+        if (_myIndex == 1)
+        {
+            level1_index = _levelIndex;
+        }
+        else if (_myIndex == 2)
+        {
+            level2_index = _levelIndex;
+        }
+        else if (_myIndex == 3)
+        {
+            level3_index = _levelIndex;
+        }
+
+
+    }
+
+
+    public void SetCurrentBallIndex(int _index)
+    {
+        photonView.RPC("RPC_SetCurrentBallIndex", RpcTarget.MasterClient, _index);
+    }
+    [PunRPC]
+    private void RPC_SetCurrentBallIndex(int _index)
+    {
+        currentBallIndex = _index;
+        ChangeObserverSceneToCurrentBall(currentBallIndex);
+    }
+
+    private void ChangeObserverSceneToCurrentBall(int _currentBall)
+    {
+        if (_currentBall == 1)
+        {
+            if (TeamManager.Instance.playerCount == 1)
+            {
+                level1Player[level1_index].Raise(this);
+            }
+            else
+            {
+
+                level1[level1_index].Raise(this);
+            }
+        }
+        else if (_currentBall == 2)
+        {
+            level2[_currentBall].Raise(this);
+        }
+        else if (_currentBall == 3)
+        {
+            level3[_currentBall].Raise(this);
+        }
     }
 }

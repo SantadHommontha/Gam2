@@ -31,7 +31,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
 
     private void CheckCurrentBallIndex()
     {
-      //  if (!gotShoot) return;
+        //  if (!gotShoot) return;
         if (photonView.IsMine)
         {
             ShowBall();
@@ -65,9 +65,10 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
     }
     public void GotShoot()
     {
-        gotShoot = true;
+        // gotShoot = true;
+        GameManager.Instance.SetCurrentBallIndex(myPlayerDataInfo.Value.playerIndex);
         ShowBall();
-        
+
         StartCoroutine(GotshootCooldown());
     }
 
@@ -117,6 +118,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
             //    Debug.Log("I Am");
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
+            GameManager.Instance.SetCurrentBallIndex(myPlayerDataInfo.Value.playerIndex);
             photonView.RPC("RPC_ReciveTakeBall", _info.Sender);
             // if (photonView.IsMine)
             // {
