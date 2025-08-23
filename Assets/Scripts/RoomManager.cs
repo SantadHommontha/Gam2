@@ -19,11 +19,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
 
-
+    void Start()
+    {
+        // isWaitingToCreateRoom = false;
+        // isWaitingToJoinLobby = false;
+    }
 
     public void LeaveRoomBTN()
     {
         TeamManager.Instance.LeaveRoom(PhotonNetwork.LocalPlayer.UserId);
+        LeaveRoom();
     }
 
     public void LeaveRoom()
@@ -41,6 +46,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
             isWaitingToJoinLobby = true;
             isWaitingToCreateRoom = true;
+        }
+        else
+        {
+            LeaveRoom();
         }
 
     }

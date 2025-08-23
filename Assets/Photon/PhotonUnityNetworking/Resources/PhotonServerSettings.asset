@@ -58,6 +58,7 @@ MonoBehaviour:
   - RPC_ChangeGameData
   - RPC_SetCurrentBallIndex
   - RPC_SentMyLevelIndex
+  - RPC_AF
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

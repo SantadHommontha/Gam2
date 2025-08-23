@@ -4,9 +4,7 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Mono.Cecil.Cil;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
+
 
 
 
@@ -554,17 +552,20 @@ public class GameManager : MonoBehaviour
 
     public void SetCurrentBallIndex(int _index)
     {
+        Debug.Log("SetCurrentBallIndex : " + _index);
         photonView.RPC("RPC_SetCurrentBallIndex", RpcTarget.MasterClient, _index);
     }
     [PunRPC]
     private void RPC_SetCurrentBallIndex(int _index)
     {
         currentBallIndex = _index;
+        Debug.Log("RPC_SetCurrentBallIndex : " + _index);
         ChangeObserverSceneToCurrentBall(currentBallIndex);
     }
 
     private void ChangeObserverSceneToCurrentBall(int _currentBall)
     {
+        Debug.Log("ChangeObserverSceneToCurrentBall : " + _currentBall);
         if (_currentBall == 1)
         {
             if (TeamManager.Instance.playerCount == 1)
@@ -579,11 +580,20 @@ public class GameManager : MonoBehaviour
         }
         else if (_currentBall == 2)
         {
-            level2[_currentBall].Raise(this);
+
+            if (TeamManager.Instance.playerCount == 2)
+            {
+                level3[level2_index].Raise(this);
+            }
+            else
+            {
+                level2[level2_index].Raise(this);
+            }
+
         }
         else if (_currentBall == 3)
         {
-            level3[_currentBall].Raise(this);
+            level3[level3_index].Raise(this);
         }
     }
 }

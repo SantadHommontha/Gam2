@@ -125,7 +125,13 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(forceVector, _forceMode2D);
         TARGET.gameObject.SetActive(false);
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            ballHandle.AF(_direction, _force);
+        }
     }
+
+
     private void TouchInput()
     {
         if (!gameData.Value.gamestart) return;
@@ -312,6 +318,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     // }
     void OnTriggerStay2D(Collider2D collision)
     {
+        if (PhotonNetwork.IsMasterClient) return;
         if (!canTrigger) return;
         if (collision.TryGetComponent<PassWay>(out var way))
         {

@@ -106,8 +106,8 @@ public class TeamManager : MonoBehaviour
             sendBackJoinTeam.playerID = playerData.playerID;
             sendBackJoinTeam.playerName = playerData.playerName;
             team.AddPlayer(playerData);
-            var pc = team.GetAllPlayer().Count;
-            sendBackJoinTeam.currentPlayer = team.GetAllPlayer().Count;
+            playerCount = team.GetAllPlayer().Count;
+            sendBackJoinTeam.currentPlayer = playerCount;
             //  playerCount = team.GetAllPlayer().Count;
             //   Debug.Log("Ap: " + ap.Count);
 
@@ -214,7 +214,7 @@ public class TeamManager : MonoBehaviour
     [PunRPC]
     private void RPC_KickPlayer()
     {
-        RoomManager.Instance.LeaveRoom();
+    //    RoomManager.Instance.LeaveRoom();
     }
 
     #endregion
@@ -237,7 +237,7 @@ public class TeamManager : MonoBehaviour
         foreach (var p in playerDisplayerValues)
         {
             PlayerData playerData = new PlayerData();
-            playerData.playerName = $"Player {num++}";
+            playerData.playerName = $"Player";
             p.Value = playerData;
         }
 

@@ -1,19 +1,25 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Collections;
-public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
+public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObservable
 {
     [SerializeField] private Ball ball;
     public PhotonView photonView;
     public string ballID;
     private BallDataWapper ballDataWapper = new BallDataWapper();
     [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    private Vector3 latestPosition;
+    private Quaternion latestRotation;
     private bool gotShoot = true;
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
     }
-
+    void Start()
+    {
+        latestPosition = ball.gameObject.transform.position;
+        latestRotation = ball.gameObject.transform.rotation;
+    }
     private void HideBall()
     {
         ball.gameObject.SetActive(false);
@@ -52,16 +58,68 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
-
+    private bool lerpPo;
     void Update()
     {
-        CheckCurrentBallIndex();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (!ball.gameObject.activeSelf)
+                ShowBall();
+            ball.enabled = true;
+            Vector3 currectVelocity = Vector3.zero;
+            // ball.gameObject.transform.localPosition = Vector3.MoveTowards(ball.gameObject.transform.localPosition, latestPosition, 5f * Time.deltaTime);
+            // if (!lerpPo)
+            // {
+            //     lerpPo = true;
+            //     StartCoroutine(LerpPosition(ball.gameObject.transform, ball.gameObject.transform.localPosition, latestPosition));
+            // }
+
+            //  ball.gameObject.transform.localRotation = Quaternion.s
+            // ball.gameObject.transform.position = Vector3.Lerp(ball.gameObject.transform.position, latestPosition, 0.4f);
+            //   ball.gameObject.transform.rotation = Quaternion.Lerp(ball.gameObject.transform.rotation, latestRotation, Time.deltaTime * 5f);
+
+        }
+        else
+        {
+
+            CheckCurrentBallIndex();
+        }
     }
 
+    private IEnumerator LerpPosition(Transform obj, Vector3 start, Vector3 end, float duration = 0.1f)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;   // เพิ่มจาก 0 → 1 ภายใน duration
+            obj.localPosition = Vector3.Lerp(start, end, t);
+            elapsedTime += Time.deltaTime;
+            yield return null; // รอเฟรมถัดไป
+        }
+
+        // ให้ไปถึง end แน่นอน
+        obj.localPosition = end;
+        lerpPo = false;
+    }
 
     public void AddForce(Vector2 _direction, float _force)
     {
         ball.AddForce(_direction, _force);
+    }
+    public void AF(Vector2 _direction, float _force)
+    {
+        float[] f = { _direction.x, _direction.y, _force };
+        photonView.RPC("RPC_AF", RpcTarget.MasterClient, f);
+    }
+    [PunRPC]
+    private void RPC_AF(float[] _f)
+    {
+        Debug.Log("RPC_AF");
+        Vector2 direction = new Vector2(_f[0], _f[1]);
+        float force = _f[2];
+        AddForce(direction, force);
+
     }
     public void GotShoot()
     {
@@ -159,6 +217,20 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback
         {
             string id = (string)info.photonView.InstantiationData[0];
             ballID = id;
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(ball.gameObject.transform.localPosition);
+            stream.SendNext(ball.gameObject.transform.localRotation);
+        }
+        else
+        {
+            latestPosition = (Vector3)stream.ReceiveNext();
+            latestRotation = (Quaternion)stream.ReceiveNext();
         }
     }
 }

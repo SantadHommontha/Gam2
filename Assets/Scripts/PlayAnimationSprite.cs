@@ -59,7 +59,7 @@ public class PlayAnimationSprite : MonoBehaviour
         currentState = AnimationState.Playing;
         currentFrameIndex = 0;
         animationCoroutine = StartCoroutine(AnimateForward());
-        Debug.Log("Play");
+        //Debug.Log("Play");
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public class PlayAnimationSprite : MonoBehaviour
         {
             spriteRenderer.sprite = animationFrames[currentFrameIndex];
             currentFrameIndex++;
-            Debug.Log("FFFFFFFF");
+         
             // if (currentFrameIndex >= animationFrames.Length)
             // {
             //     currentFrameIndex = 0; // วนกลับไปเริ่มใหม่เมื่อจบ Animation
