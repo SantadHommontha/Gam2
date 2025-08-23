@@ -127,7 +127,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         TARGET.gameObject.SetActive(false);
         if (!PhotonNetwork.IsMasterClient)
         {
-            ballHandle.AF(_direction, _force);
+         //   ballHandle.AF(_direction, _force);
         }
     }
 
