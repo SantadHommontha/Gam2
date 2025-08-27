@@ -325,6 +325,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             if (way.up && rb.linearVelocityY > 0)
             {
                 ballHandle.TakeBvall(true);
+                
             }
             else if (!way.up && rb.linearVelocityY < 0)
             {
