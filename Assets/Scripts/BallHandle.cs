@@ -48,8 +48,13 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
                 ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
                 //  StartCoroutine(Cooldown());
+
+
                 isSet = true;
             }
+            latestPosition = ball.gameObject.transform.localPosition;
+            float[] posi = { latestPosition.x, latestPosition.y, latestPosition.z };
+            photonView.RPC("RPC_SendPosition", RpcTarget.MasterClient, posi);
         }
         else
         {
@@ -57,7 +62,13 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
             HideBall();
         }
     }
-
+    [PunRPC]
+    private void RPC_SendPosition(float[] _position)
+    {
+        Vector3 posi = new Vector3(_position[0], _position[1], _position[2]);
+        Debug.Log($"Posi " + posi);
+        latestPosition = posi;
+    }
     private bool lerpPo;
     void Update()
     {
@@ -65,7 +76,8 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         {
             if (!ball.gameObject.activeSelf)
                 ShowBall();
-            ball.enabled = true;
+            // ball.enabled = true;
+            ball.gameObject.GetComponent<Rigidbody2D>().simulated = false;
             Vector3 currectVelocity = Vector3.zero;
             // ball.gameObject.transform.localPosition = Vector3.MoveTowards(ball.gameObject.transform.localPosition, latestPosition, 5f * Time.deltaTime);
             // if (!lerpPo)
@@ -73,7 +85,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
             //     lerpPo = true;
             //     StartCoroutine(LerpPosition(ball.gameObject.transform, ball.gameObject.transform.localPosition, latestPosition));
             // }
-
+            ball.gameObject.transform.localPosition = latestPosition;
             //  ball.gameObject.transform.localRotation = Quaternion.s
             // ball.gameObject.transform.position = Vector3.Lerp(ball.gameObject.transform.position, latestPosition, 0.4f);
             //   ball.gameObject.transform.rotation = Quaternion.Lerp(ball.gameObject.transform.rotation, latestRotation, Time.deltaTime * 5f);
@@ -224,13 +236,13 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(ball.gameObject.transform.localPosition);
-            stream.SendNext(ball.gameObject.transform.localRotation);
+            //    stream.SendNext(ball.gameObject.transform.localPosition);
+            //   stream.SendNext(ball.gameObject.transform.localRotation);
         }
         else
         {
-            latestPosition = (Vector3)stream.ReceiveNext();
-            latestRotation = (Quaternion)stream.ReceiveNext();
+            //     latestPosition = (Vector3)stream.ReceiveNext();
+            //     latestRotation = (Quaternion)stream.ReceiveNext();
         }
     }
 }

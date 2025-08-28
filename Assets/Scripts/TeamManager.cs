@@ -155,7 +155,7 @@ public class TeamManager : MonoBehaviour
     [PunRPC]
     private void RPC_PlayerChange(string _jsonData)
     {
-        Debug.Log($"Recive JsonData: {_jsonData}");
+     //   Debug.Log($"Recive JsonData: {_jsonData}");
         SetLevelWarpper setLevelWarpper = JsonUtility.FromJson<SetLevelWarpper>(_jsonData);
         foreach (var T in setLevelWarpper.setLevels)
         {

@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     {
         EndState();
         gameState = _gameState;
-        Debug.Log($"New State {gameState}");
+     //   Debug.Log($"New State {gameState}");
         switch (gameState)
         {
             case GameState.None:
@@ -559,13 +559,13 @@ public class GameManager : MonoBehaviour
     private void RPC_SetCurrentBallIndex(int _index)
     {
         currentBallIndex = _index;
-        Debug.Log("RPC_SetCurrentBallIndex : " + _index);
+    //    Debug.Log("RPC_SetCurrentBallIndex : " + _index);
         ChangeObserverSceneToCurrentBall(currentBallIndex);
     }
 
     private void ChangeObserverSceneToCurrentBall(int _currentBall)
     {
-        Debug.Log("ChangeObserverSceneToCurrentBall : " + _currentBall);
+      //  Debug.Log("ChangeObserverSceneToCurrentBall : " + _currentBall);
         if (_currentBall == 1)
         {
             if (TeamManager.Instance.playerCount == 1)

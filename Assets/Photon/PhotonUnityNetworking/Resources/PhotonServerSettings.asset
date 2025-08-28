@@ -59,6 +59,7 @@ MonoBehaviour:
   - RPC_SetCurrentBallIndex
   - RPC_SentMyLevelIndex
   - RPC_AF
+  - RPC_SendPosition
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
