@@ -87,7 +87,7 @@ public class Display_Value : MonoBehaviour
                 Show_UI(gameDataValue.Value.gamestart.ToString());
                 break;
             case GameDataValueShow.iamAdmin:
-                Show_UI(gameDataValue.Value.iamAdmin.ToString());
+                Show_UI(gameDataValue.Value.isPlayer.ToString());
                 break;
             case GameDataValueShow.roomCode:
                 Show_UI(gameDataValue.Value.roomCode);

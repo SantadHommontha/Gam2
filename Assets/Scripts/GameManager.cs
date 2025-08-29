@@ -13,6 +13,8 @@ public class GameDataWapper
 {
     public bool gameStart;
     public float gameTime;
+
+
 }
 
 [System.Serializable]
@@ -23,19 +25,26 @@ public class GameData
     public float gametimer;
     public float usetime;
     public bool gamestart;
-    public bool iamAdmin;
+    public bool isAdmin;
+    public bool isPlayer;
     public string roomCode;
     public bool spacetator;
+    public string gameState;
     public GameData() { }
     public GameData(GameData _gameData)
+    {
+        SetData(_gameData);
+    }
+    public void SetData(GameData _gameData)
     {
         gamescore = _gameData.gamescore;
         gametimer = _gameData.gametimer;
         usetime = _gameData.usetime;
         gamestart = _gameData.gamestart;
-        iamAdmin = _gameData.iamAdmin;
+        isAdmin = _gameData.isAdmin;
         roomCode = _gameData.roomCode;
         spacetator = _gameData.spacetator;
+        isPlayer = _gameData.isPlayer;
     }
 }
 
@@ -69,7 +78,7 @@ public class GameManager : MonoBehaviour
     [Header("Value")]
     [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private GameDataValue gameData;
-    [SerializeField] private BoolValue isPlayerValue;
+    // [SerializeField] private BoolValue isPlayerValue;
 
 
 
@@ -79,6 +88,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameEvent wait;
     [SerializeField] private GameEvent gameOver;
     [SerializeField] private GameEvent setGame;
+    [SerializeField] private GameEvent playGame;
     [Header("Leavel")]
 
     [SerializeField] private List<GameEvent> level1Player;
@@ -100,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         EndState();
         gameState = _gameState;
-     //   Debug.Log($"New State {gameState}");
+        //   Debug.Log($"New State {gameState}");
         switch (gameState)
         {
             case GameState.None:
@@ -211,9 +221,12 @@ public class GameManager : MonoBehaviour
                 gameTimer.StartTimer();
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    SendGameData();
-
+                    SendGameData(gameData.Value);
+                    ChangeObserverSceneToCurrentBall(1);
                 }
+
+                playGame.Raise(this);
+
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case GameState.Over:
@@ -331,9 +344,9 @@ public class GameManager : MonoBehaviour
         //     else
         //         StartState(GameState.SetGame);
         // }
-        if (gameData.Value.iamAdmin)
+        if (gameData.Value.isAdmin)
         {
-            if (isPlayerValue.Value)
+            if (gameData.Value.isPlayer)
                 StartState(GameState.EnterName);
             else
                 StartState(GameState.SetGame);
@@ -436,11 +449,23 @@ public class GameManager : MonoBehaviour
     {
         StartState(GameState.Wait);
     }
-    private void SendGameData()
+    // private void SendGameData(GameData _data)
+    // {
+    //     GameDataWapper gameDataWapper = new GameDataWapper();
+    //     gameDataWapper.gameStart = _data.gamestart;
+    //     gameDataWapper.gameTime = gameSetting.gameTime;
+
+
+
+
+    //     string dataJson = JsonUtility.ToJson(gameDataWapper);
+
+    //     photonView.RPC("RPC_GameData", RpcTarget.Others, dataJson);
+    // }
+    private void SendGameData(GameData _data)
     {
-        GameDataWapper gameDataWapper = new GameDataWapper();
-        gameDataWapper.gameStart = gameData.Value.gamestart;
-        gameDataWapper.gameTime = gameSetting.gameTime;
+        GameData gameDataWapper = new GameData(_data);
+
 
         string dataJson = JsonUtility.ToJson(gameDataWapper);
 
@@ -449,7 +474,8 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     private void RPC_GameData(string _dataJson)
     {
-        GameDataWapper gameDataWapper = JsonUtility.FromJson<GameDataWapper>(_dataJson);
+        GameData gameDataWapper = JsonUtility.FromJson<GameData>(_dataJson);
+        this.gameData.Value.SetData(gameDataWapper);
         if (gameDataWapper.gameStart)
         {
             gameSetting.gameTime = gameDataWapper.gameTime;
@@ -559,13 +585,13 @@ public class GameManager : MonoBehaviour
     private void RPC_SetCurrentBallIndex(int _index)
     {
         currentBallIndex = _index;
-    //    Debug.Log("RPC_SetCurrentBallIndex : " + _index);
+        //    Debug.Log("RPC_SetCurrentBallIndex : " + _index);
         ChangeObserverSceneToCurrentBall(currentBallIndex);
     }
 
     private void ChangeObserverSceneToCurrentBall(int _currentBall)
     {
-      //  Debug.Log("ChangeObserverSceneToCurrentBall : " + _currentBall);
+        //  Debug.Log("ChangeObserverSceneToCurrentBall : " + _currentBall);
         if (_currentBall == 1)
         {
             if (TeamManager.Instance.playerCount == 1)
@@ -596,4 +622,16 @@ public class GameManager : MonoBehaviour
             level3[level3_index].Raise(this);
         }
     }
+
+
+
+
+
+
+    private void GameOver()
+    {
+
+    }
+
+
 }

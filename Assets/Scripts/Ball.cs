@@ -84,7 +84,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
 
     // Update is called once per frame
-    void Update()
+    public void Ball_Update()
     {
         if (!gameData.Value.gamestart) return;
         if (isClick)
@@ -105,12 +105,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         //     // TakeBvall();
         // 
         isGround = IsGrounded2D();
-        if (isGround)
-        {
 
-            OnBallHitGround();
-
-        }
 
     }
     private void AddForce(Vector2 _direction, ForceMode2D _forceMode2D = ForceMode2D.Impulse)
@@ -127,7 +122,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         TARGET.gameObject.SetActive(false);
         if (!PhotonNetwork.IsMasterClient)
         {
-         //   ballHandle.AF(_direction, _force);
+            //   ballHandle.AF(_direction, _force);
         }
     }
 
@@ -184,7 +179,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         }
 
     }
-    void FixedUpdate()
+    public void Ball_FixedUpdate()
     {
         if (!gameData.Value.gamestart) return;
         if (!isPlayer.Value) return;
@@ -193,12 +188,32 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
             shot = false;
             AddForce(oppositeDirection, force);
-            OnShootBall();
+
         }
 
+
+    }
+
+    public void BallAnimation()
+    {
         if (rb.linearVelocityY < 0)
         {
             OnBallFail();
+        }
+        else if (rb.linearVelocityY > 0)
+        {
+            OnShootBall();
+        }
+        else
+        {
+            
+        }
+
+        if (isGround)
+        {
+
+            OnBallHitGround();
+
         }
     }
     void OnMouseDrag()
@@ -325,7 +340,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             if (way.up && rb.linearVelocityY > 0)
             {
                 ballHandle.TakeBvall(true);
-                
+
             }
             else if (!way.up && rb.linearVelocityY < 0)
             {

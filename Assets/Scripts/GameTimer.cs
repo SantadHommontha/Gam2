@@ -38,8 +38,8 @@ public class GameTimer : MonoBehaviour
         timer = _gameTime;
         while ((timer > 0))
         {
-            if (timerUpdateEvent)
-                timerUpdateEvent.Raise(this, timer);
+            // if (timerUpdateEvent)
+            //     timerUpdateEvent.Raise(this, timer);
             yield return new WaitForSeconds(fetchTimer);
             if (timerUpdateEvent)
                 timerUpdateEvent.Raise(this, timer);
