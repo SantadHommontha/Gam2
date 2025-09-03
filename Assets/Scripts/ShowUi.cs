@@ -12,9 +12,14 @@ public class ShowUi : MonoBehaviour
 
     public void SetUp()
     {
-      
+
         opneMenu.gameObject.SetActive(gameData.Value.isPlayer);
         openControl.gameObject.SetActive(gameData.Value.isAdmin);
 
+    }
+    public void HideAll()
+    {
+        opneMenu.gameObject.SetActive(false);
+        openControl.gameObject.SetActive(false);
     }
 }

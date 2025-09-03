@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [Header("Public")]
 
-    [SerializeField] private GameState gameState = GameState.None;
+    [SerializeField] private string gameState = GameState.None.ToString();
     [SerializeField] private GameObject gamgeControl;
     private int currentBallIndex;
 
@@ -105,17 +105,16 @@ public class GameManager : MonoBehaviour
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
     [SerializeField] private Toggle toggle;
-
-    public void StartState(GameState _gameState)
+    private void StartState(string _newState)
     {
         EndState();
-        gameState = _gameState;
+        gameState = _newState;
         //   Debug.Log($"New State {gameState}");
         switch (gameState)
         {
-            case GameState.None:
+            case "None":
                 break;
-            case GameState.EnterName:
+            case "EnterName":
 
                 // Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
                 // Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
@@ -125,9 +124,9 @@ public class GameManager : MonoBehaviour
                 Scene_Game_All_UI.Instance.HideAll();
 
                 Scene_Game_All_UI.Instance.Panel_enterName.SetActive(true);
-                //  enterName.Raise(this);
+                enterName.Raise(this);
                 break;
-            case GameState.SetGame:
+            case "SetGame":
 
                 Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
                 Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
@@ -144,7 +143,7 @@ public class GameManager : MonoBehaviour
                 setGame.Raise(this);
 
                 break;
-            case GameState.Wait:
+            case "Wait":
                 Scene_Game_All_UI.Instance.HideAll();
                 if (PhotonNetwork.IsMasterClient)
                 {
@@ -211,7 +210,7 @@ public class GameManager : MonoBehaviour
                 wait.Raise(this);
 
                 break;
-            case GameState.Play:
+            case "Play":
 
                 Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
 
@@ -229,7 +228,7 @@ public class GameManager : MonoBehaviour
 
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
-            case GameState.Over:
+            case "Over":
                 Scene_Game_All_UI.Instance.openControlBTN.SetActive(false);
                 Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
                 Scene_Game_All_UI.Instance.playerIndex.SetActive(false);
@@ -254,21 +253,25 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    public void StartState(GameState _gameState)
+    {
+        StartState(_gameState.ToString());
+    }
 
     private void EndState()
     {
         switch (gameState)
         {
-            case GameState.None:
+            case "None":
                 break;
-            case GameState.Wait:
+            case "Wait":
                 Scene_Game_All_UI.Instance.openMenuBTN.SetActive(true);
                 Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
                 break;
-            case GameState.Play:
+            case "Play":
                 Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(false);
                 break;
-            case GameState.Over:
+            case "Over":
                 break;
         }
     }
@@ -276,11 +279,11 @@ public class GameManager : MonoBehaviour
     {
         switch (gameState)
         {
-            case GameState.None:
+            case "None":
                 break;
-            case GameState.Wait:
+            case "Wait":
                 break;
-            case GameState.Play:
+            case "Play":
 
                 if (gameData.Value.gametimer <= 0)
                 {
@@ -292,7 +295,7 @@ public class GameManager : MonoBehaviour
                     StartState(GameState.Over);
                 }
                 break;
-            case GameState.Over:
+            case "Over":
                 break;
         }
     }
@@ -313,37 +316,7 @@ public class GameManager : MonoBehaviour
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
-        // #if UNITY_EDITOR
 
-        //         if (isPlayer)
-        //         {
-        //             StartState(GameState.EnterName);
-        //         }
-        //         else
-        //         {
-        //             StartState(GameState.SetGame);
-        //         }
-
-        // #else
-
-        //  if (!gameData.Value.iamAdmin)
-        //             StartState(GameState.EnterName);
-        //         else
-        //             StartState(GameState.SetGame);
-
-        // #endif
-
-        // if (isPlayer)
-        // {
-        //     StartState(GameState.EnterName);
-        // }
-        // else
-        // {
-        //     if (!iamAdmin.Value)
-        //         StartState(GameState.EnterName);
-        //     else
-        //         StartState(GameState.SetGame);
-        // }
         if (gameData.Value.isAdmin)
         {
             if (gameData.Value.isPlayer)
@@ -476,13 +449,16 @@ public class GameManager : MonoBehaviour
     {
         GameData gameDataWapper = JsonUtility.FromJson<GameData>(_dataJson);
         this.gameData.Value.SetData(gameDataWapper);
-        if (gameDataWapper.gameStart)
-        {
-            gameSetting.gameTime = gameDataWapper.gameTime;
-            StartState(GameState.Play);
-            gameData.Value.gamestart = true;
 
-        }
+        StartState(gameData.Value.gameState);
+
+        // if (gameDataWapper.gameStart)
+        // {
+        //     gameSetting.gameTime = gameDataWapper.gameTime;
+        //     StartState(GameState.Play);
+        //     gameData.Value.gamestart = true;
+
+        // }
     }
 
 

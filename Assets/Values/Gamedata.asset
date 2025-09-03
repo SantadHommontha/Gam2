@@ -15,17 +15,21 @@ MonoBehaviour:
   description: 
   value:
     gamescore: 0
-    gametimer: 30
+    gametimer: 0
     usetime: 0
     gamestart: 0
-    iamAdmin: 1
-    roomCode: q81a
+    isAdmin: 0
+    isPlayer: 1
+    roomCode: gyuw
     spacetator: 0
+    gameState: 
   initialValue:
     gamescore: 0
-    gametimer: 30
+    gametimer: 0
     usetime: 0
     gamestart: 0
-    iamAdmin: 1
-    roomCode: q81a
+    isAdmin: 0
+    isPlayer: 0
+    roomCode: 0
     spacetator: 0
+    gameState: 

@@ -34,7 +34,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         gameData.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
-        gameData.Value.isPlayer = true;
+        gameData.Value.isAdmin = true;
         PhotonNetwork.CreateRoom(gameData.Value.roomCode, roomOptions, TypedLobby.Default);
     }
     private void ChangeMeassge(string _text = "")
@@ -49,7 +49,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         ChangeMeassge("Join Room");
         gameData.Value.isPlayer = true;
         isPlayer.Value = true;
-        gameData.Value.isPlayer = false;
+        // gameData.Value.isPlayer = false;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
 
     }
@@ -58,19 +58,16 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     {
         if (roomName.text.ToLower() == adminCode_value.Value.ToLower())
         {
-            Debug.Log("11111");
             CreateRoom();
         }
         else if (roomName.text.ToLower() == "onionplayer")
         {
             gameData.Value.isPlayer = true;
             isPlayer.Value = true;
-            Debug.Log("2222");
             CreateRoom();
         }
         else
         {
-            Debug.Log("333 + " + roomName.text.ToLower());
             JoinRoom();
         }
 

@@ -8,6 +8,7 @@ public class GameDataValue : ScriptableValue<GameData>
 
     public override void ResetValue()
     {
-        SetValue(initialValue);
+        GameData init = new GameData(initialValue);
+        SetValue(init);
     }
 }
