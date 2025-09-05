@@ -206,7 +206,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         }
         else
         {
-            
+            //
         }
 
         if (isGround)
@@ -258,46 +258,6 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         isClick = true;
     }
 
-
-
-
-
-
-
-
-    // private void TakeBvall(bool _up)
-    // {
-    //     BallDataWapper ballDataWapper = new BallDataWapper();
-    //     ballDataWapper.playerSendIndex = GameManager.Instance.playerIndex;
-    //     ballDataWapper.nextPLayerIndex = _up ? GameManager.Instance.playerIndex + 1 : GameManager.Instance.playerIndex - 1;
-    //     ballDataWapper.xPosition = transform.position.x;
-    //     ballDataWapper.yPosition = transform.position.y;
-    //     ballDataWapper.xVelocity = rb.linearVelocityX;
-    //     ballDataWapper.yVelocity = rb.linearVelocityY;
-
-    //     string ballDataJson = JsonUtility.ToJson(ballDataWapper);
-    //     Debug.Log("Send Ball");
-    //     gameObject.SetActive(false);
-
-    //     photonView.RPC("RPC_TakeBall", RpcTarget.Others, ballDataJson);
-    // }
-
-    // [PunRPC]
-    // private void RPC_TakeBall(string _BallDataJson)
-    // {
-    //     Debug.Log("Recive Ball");
-    //     BallDataWapper ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
-    //     if (ballDataWapper.nextPLayerIndex == GameManager.Instance.playerIndex)
-    //     {
-
-    //         gameObject.SetActive(true);
-    //         transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
-    //         rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-    //     }
-
-    // }
-
-
     public void SetUP(Vector2 _position, Vector2 _rbVelocity)
     {
         transform.position = new Vector3(_position.x, -4.3f, 0);
@@ -313,24 +273,6 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         return false;
     }
 
-    // void OnTriggerEnter2D(Collider2D collision)
-    // {
-    //     Debug.Log($"Trigger: " + collision.gameObject.name);
-    //     if (!canTrigger) return;
-    //     if (collision.TryGetComponent<PassWay>(out var way))
-    //     {
-    //         if (way.up && rb.linearVelocityY > 0)
-    //         {
-    //             ballHandle.TakeBvall(true);
-    //         }
-    //         else if (!way.up && rb.linearVelocityY < 0)
-    //         {
-    //             ballHandle.TakeBvall(false);
-    //         }
-    //     }
-
-
-    // }
     void OnTriggerStay2D(Collider2D collision)
     {
         if (PhotonNetwork.IsMasterClient) return;
@@ -348,10 +290,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             }
         }
     }
-    // void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     Debug.Log($"Collision: " + collision.gameObject.name);
-    // }
+
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (info.photonView.InstantiationData != null && info.photonView.InstantiationData.Length > 0)
@@ -361,17 +300,6 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
         }
     }
 
-
-
-    private void CheckGround()
-    {
-
-    }
-
-    /// <summary>
-    /// ฟังก์ชันสำหรับเช็คว่า GameObject อยู่บนพื้นหรือไม่ (2D)
-    /// </summary>
-    /// <returns>True ถ้า Raycast ชนกับ Layer พื้นที่กำหนด, False ถ้าไม่ชน</returns>
     public bool IsGrounded2D()
     {
 
@@ -381,20 +309,17 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             return false;
         }
 
-        // ยิง Raycast ลงมาจาก groundCheckPoint
+       
         RaycastHit2D hit = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
 
-        // วาด Raycast เพื่อ Debug ใน Scene View (จะเห็นเมื่อ Show Debug Ray เป็น true)
         if (showDebugRay)
         {
             Debug.DrawRay(groundCheckPoint.position, Vector2.down * groundCheckDistance, hit.collider != null ? debugRayColor : Color.red);
         }
 
-        // ถ้า Raycast ชนกับ Collider ใดๆ ใน Layer ที่กำหนด
+      
         if (hit.collider != null)
         {
-            // สามารถเพิ่มเงื่อนไขอื่นๆ ได้ที่นี่ เช่น เช็ค Tag หรือ Component
-            // if (hit.collider.CompareTag("Ground")) { return true; }
             return true;
         }
         return false;

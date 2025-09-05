@@ -4,8 +4,21 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
+[System.Serializable]
+public class SetLevelWarpper
+{
+    public SetLevel[] setLevels;
+}
 
+[System.Serializable]
+public class SetLevel
+{
+    public int targetIndex;
+    public int level;
+    public int subLevel;
+}
 
 
 [System.Serializable]
@@ -17,36 +30,37 @@ public class GameDataWapper
 
 }
 
-[System.Serializable]
-public class GameData
-{
+// [System.Serializable]
+// public class GameData
+// {
 
-    public int gamescore;
-    public float gametimer;
-    public float usetime;
-    public bool gamestart;
-    public bool isAdmin;
-    public bool isPlayer;
-    public string roomCode;
-    public bool spacetator;
-    public string gameState;
-    public GameData() { }
-    public GameData(GameData _gameData)
-    {
-        SetData(_gameData);
-    }
-    public void SetData(GameData _gameData)
-    {
-        gamescore = _gameData.gamescore;
-        gametimer = _gameData.gametimer;
-        usetime = _gameData.usetime;
-        gamestart = _gameData.gamestart;
-        isAdmin = _gameData.isAdmin;
-        roomCode = _gameData.roomCode;
-        spacetator = _gameData.spacetator;
-        isPlayer = _gameData.isPlayer;
-    }
-}
+//     public int gamescore;
+//     public float gametimer;
+//     public float usetime;
+//     public bool gamestart;
+//     public bool isAdmin;
+//     public bool isPlayer;
+//     public string roomCode;
+//     public bool spacetator;
+//     public string gameState;
+    
+//     public GameData() { }
+//     public GameData(GameData _gameData)
+//     {
+//         SetData(_gameData);
+//     }
+//     public void SetData(GameData _gameData)
+//     {
+//         gamescore = _gameData.gamescore;
+//         gametimer = _gameData.gametimer;
+//         usetime = _gameData.usetime;
+//         gamestart = _gameData.gamestart;
+//         isAdmin = _gameData.isAdmin;
+//         roomCode = _gameData.roomCode;
+//         spacetator = _gameData.spacetator;
+//         isPlayer = _gameData.isPlayer;
+//     }
+// }
 
 public enum GameState
 {
@@ -76,8 +90,9 @@ public class GameManager : MonoBehaviour
 
     private PhotonView photonView;
     [Header("Value")]
-    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+   // [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private GameDataValue gameData;
+    [SerializeField] private GameInfoValue gameInfo;
     // [SerializeField] private BoolValue isPlayerValue;
 
 
@@ -101,10 +116,11 @@ public class GameManager : MonoBehaviour
     private int level2_index = 0;
     private int level3_index = 0;
 
-
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
     [SerializeField] private Toggle toggle;
+
+    #region GameState
     private void StartState(string _newState)
     {
         EndState();
@@ -121,18 +137,18 @@ public class GameManager : MonoBehaviour
                 // Scene_Game_All_UI.Instance.playerIndex.SetActive(false);
                 // Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(false);
                 // sce
-                Scene_Game_All_UI.Instance.HideAll();
+                // Scene_Game_All_UI.Instance.HideAll();
 
-                Scene_Game_All_UI.Instance.Panel_enterName.SetActive(true);
+                // Scene_Game_All_UI.Instance.Panel_enterName.SetActive(true);
                 enterName.Raise(this);
                 break;
             case "SetGame":
 
-                Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
-                Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
+                // Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
+                // Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
 
-                Scene_Game_All_UI.Instance.playerIndex.SetActive(true);
-                Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
+                // Scene_Game_All_UI.Instance.playerIndex.SetActive(true);
+                // Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
 
 
 
@@ -144,19 +160,19 @@ public class GameManager : MonoBehaviour
 
                 break;
             case "Wait":
-                Scene_Game_All_UI.Instance.HideAll();
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
-                    Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
-                }
-                else
-                {
-                    Scene_Game_All_UI.Instance.openMenuBTN.SetActive(true);
-                    Scene_Game_All_UI.Instance.openControlBTN.SetActive(false);
-                }
-                Scene_Game_All_UI.Instance.playerIndex.SetActive(true);
-                Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
+                //  Scene_Game_All_UI.Instance.HideAll();
+                // if (PhotonNetwork.IsMasterClient)
+                // {
+                //     Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
+                //     Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
+                // }
+                // else
+                // {
+                //  /   Scene_Game_All_UI.Instance.openMenuBTN.SetActive(true);
+                //   //  Scene_Game_All_UI.Instance.openControlBTN.SetActive(false);
+                // }
+                //   Scene_Game_All_UI.Instance.playerIndex.SetActive(true);
+                //   Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
 
                 gameData.Value.gamestart = false;
                 gameData.Value.gamescore = 0;
@@ -170,49 +186,49 @@ public class GameManager : MonoBehaviour
 
 
 
-                if (playerCount == 1)
-                {
-                    RamdomLevel(level1Player, out level1_index).Raise(this);
-                    SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
-                }
-                else if (playerCount == 2)
-                {
-                    if (myPlayerDataInfo.Value.playerIndex == 1)
-                    {
-                        RamdomLevel(level1, out level1_index).Raise(this);
-                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
-                    }
-                    else
-                    {
-                        RamdomLevel(level3, out level3_index).Raise(this);
-                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
-                    }
-                }
-                else
-                {
-                    if (myPlayerDataInfo.Value.playerIndex == 1)
-                    {
-                        RamdomLevel(level1, out level1_index).Raise(this);
-                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
-                    }
-                    else if (myPlayerDataInfo.Value.playerIndex == 2)
-                    {
-                        RamdomLevel(level2, out level2_index).Raise(this);
-                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level2_index);
-                    }
-                    else
-                    {
-                        RamdomLevel(level3, out level3_index).Raise(this);
-                        SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
-                    }
-                }
+                // if (playerCount == 1)
+                // {
+                //     RamdomLevel(level1Player, out level1_index).Raise(this);
+                //     SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
+                // }
+                // else if (playerCount == 2)
+                // {
+                //     if (myPlayerDataInfo.Value.playerIndex == 1)
+                //     {
+                //         RamdomLevel(level1, out level1_index).Raise(this);
+                //         SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
+                //     }
+                //     else
+                //     {
+                //         RamdomLevel(level3, out level3_index).Raise(this);
+                //         SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
+                //     }
+                // }
+                // else
+                // {
+                //     if (myPlayerDataInfo.Value.playerIndex == 1)
+                //     {
+                //         RamdomLevel(level1, out level1_index).Raise(this);
+                //         SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level1_index);
+                //     }
+                //     else if (myPlayerDataInfo.Value.playerIndex == 2)
+                //     {
+                //         RamdomLevel(level2, out level2_index).Raise(this);
+                //         SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level2_index);
+                //     }
+                //     else
+                //     {
+                //         RamdomLevel(level3, out level3_index).Raise(this);
+                //         SentMyLevelIndex(myPlayerDataInfo.Value.playerIndex, level3_index);
+                //     }
+                // }
 
                 wait.Raise(this);
 
                 break;
             case "Play":
 
-                Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
+                // Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
 
 
                 gameData.Value.gamestart = true;
@@ -229,21 +245,21 @@ public class GameManager : MonoBehaviour
                 //   RamdomLevel(level1).Raise(this, -979);
                 break;
             case "Over":
-                Scene_Game_All_UI.Instance.openControlBTN.SetActive(false);
-                Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
-                Scene_Game_All_UI.Instance.playerIndex.SetActive(false);
+                //  Scene_Game_All_UI.Instance.openControlBTN.SetActive(false);
+                //   Scene_Game_All_UI.Instance.openMenuBTN.SetActive(false);
+                //   Scene_Game_All_UI.Instance.playerIndex.SetActive(false);
 
-                Scene_Game_All_UI.Instance.backbtn.SetActive(true);
+                //   Scene_Game_All_UI.Instance.backbtn.SetActive(true);
                 gameOver.Raise(this);
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    Scene_Game_All_UI.Instance.backBtn_text.text = "Back";
+                    //     Scene_Game_All_UI.Instance.backBtn_text.text = "Back";
                     SpawnBall.Instance.RemoveAllBall();
                 }
-                else
-                {
-                    Scene_Game_All_UI.Instance.backBtn_text.text = "Leave";
-                }
+                // else
+                // {
+                // //    Scene_Game_All_UI.Instance.backBtn_text.text = "Leave";
+                // }
 
 
                 gameTimer.StopTimer();
@@ -265,11 +281,11 @@ public class GameManager : MonoBehaviour
             case "None":
                 break;
             case "Wait":
-                Scene_Game_All_UI.Instance.openMenuBTN.SetActive(true);
-                Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
+                //  Scene_Game_All_UI.Instance.openMenuBTN.SetActive(true);
+                //   Scene_Game_All_UI.Instance.openControlBTN.SetActive(true);
                 break;
             case "Play":
-                Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(false);
+                //  Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(false);
                 break;
             case "Over":
                 break;
@@ -299,7 +315,9 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Unity Function
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -330,46 +348,100 @@ public class GameManager : MonoBehaviour
         {
             StartState(GameState.EnterName);
         }
-        myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
+   //     myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
 
     // Update is called once per frame
     void Update()
     {
-        ui_playerIndex.text = $"Player {myPlayerDataInfo.Value.playerIndex.ToString()}";
+        ui_playerIndex.text = $"Player {gameInfo.Value.myPlayerIndex.ToString()}";
 
         // if (playerIndex > 1)
         //     bottomLevel.SetActive(false);
         UpdateState();
     }
+    #endregion
 
-    private GameEvent RamdomLevel(List<GameEvent> _gameEvents)
+    #region Random Level
+    private int RamdomLevel(List<GameEvent> _gameEvents)
     {
         return RamdomLevel(_gameEvents, out int _index);
     }
-    private GameEvent RamdomLevel(List<GameEvent> _gameEvents, out int _index)
+    private int RamdomLevel(List<GameEvent> _gameEvents, out int _index)
     {
         _index = UnityEngine.Random.Range(0, _gameEvents.Count - 1);
-        return _gameEvents[_index];
+        return _index;
     }
 
+    public void RandomLevel(int _playerCount)
+    {
+        SetLevel[] setLevels = new SetLevel[_playerCount];
 
+        Func<int, (int, int)> _level = (_index) =>
+        {
+            if (_index == 1) return (1, RamdomLevel(level1));
+            else if (_index == 2) return (2, RamdomLevel(level2));
+            else return (3, RamdomLevel(level3));
+        };
+
+        if (_playerCount == 1)
+        {
+            setLevels[0].targetIndex = 1;
+            setLevels[0].level = 0;
+            setLevels[0].subLevel = RamdomLevel(level1Player);
+        }
+        else if (_playerCount > 0)
+        {
+            for (int i = 0; i < _playerCount; i++)
+            {
+                setLevels[i] = new SetLevel();
+
+
+                setLevels[i].targetIndex = i + 1;
+                var lv = _level(i + 1);
+                setLevels[i].level = lv.Item1;
+                setLevels[i].subLevel = lv.Item2;
+
+            }
+        }
+
+        SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
+        setLevelWarpper.setLevels = setLevels;
+        string jsonData = JsonUtility.ToJson(setLevelWarpper);
+        photonView.RPC("RPC_SetLevel", RpcTarget.Others, jsonData);
+    }
+    [PunRPC]
+    private void RPC_SetLevel(string _jsonData)
+    {
+        //   Debug.Log($"Recive JsonData: {_jsonData}");
+        SetLevelWarpper setLevelWarpper = JsonUtility.FromJson<SetLevelWarpper>(_jsonData);
+        foreach (var T in setLevelWarpper.setLevels)
+        {
+            if (T.targetIndex == gameInfo.Value.myPlayerIndex)
+            {
+                Debug.Log($"SetLevel: {T.level} {T.subLevel}");
+                GameManager.Instance.SetMyLevel(T.level, T.subLevel);
+            }
+        }
+        // GameManager.Instance.StartState(GameState.Wait);
+    }
+    #endregion
     public void ReciveJoinTeamStatus(MyPlayerDataInfo _myPlayerDataInfo)
     {
         if (_myPlayerDataInfo.status)
         {
-            myPlayerDataInfo.Value.playerIndex = _myPlayerDataInfo.playerIndex;
+            gameInfo.Value.myPlayerIndex = _myPlayerDataInfo.playerIndex;
             StartState(GameState.Wait);
         }
     }
 
     public void SetPlayerIndex()
     {
-        myPlayerDataInfo.Value.playerIndex = int.Parse(tMP_InputField.text);
+        gameInfo.Value.myPlayerIndex = int.Parse(tMP_InputField.text);
     }
 
-
+    #region Score
     public void AddScore(int _score = 1)
     {
         photonView.RPC("RPC_AddScore", RpcTarget.MasterClient, _score);
@@ -385,8 +457,8 @@ public class GameManager : MonoBehaviour
     {
         gameData.Value.gamescore += _score;
     }
-
-
+    #endregion
+    #region Game Button
     public void NewRoom()
     {
         RoomManager.Instance.NewRoom();
@@ -417,24 +489,15 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
             photonView.RPC("RPC_ResetGame", RpcTarget.Others);
     }
+    #endregion
+
+
+
     [PunRPC]
     private void RPC_ResetGame()
     {
         StartState(GameState.Wait);
     }
-    // private void SendGameData(GameData _data)
-    // {
-    //     GameDataWapper gameDataWapper = new GameDataWapper();
-    //     gameDataWapper.gameStart = _data.gamestart;
-    //     gameDataWapper.gameTime = gameSetting.gameTime;
-
-
-
-
-    //     string dataJson = JsonUtility.ToJson(gameDataWapper);
-
-    //     photonView.RPC("RPC_GameData", RpcTarget.Others, dataJson);
-    // }
     private void SendGameData(GameData _data)
     {
         GameData gameDataWapper = new GameData(_data);
@@ -461,7 +524,7 @@ public class GameManager : MonoBehaviour
         // }
     }
 
-
+    #region Change player index
     public void SetPlayerIndex(int _playerIndex, int _newIndex)
     {
         var player = TeamManager.Instance.team.GetPlayerByIndex(_playerIndex);
@@ -473,14 +536,16 @@ public class GameManager : MonoBehaviour
     private void RPC_SetPlayerIndex(int _newIndex)
     {
 
-        myPlayerDataInfo.Value.playerIndex = _newIndex;
+        gameInfo.Value.myPlayerIndex = _newIndex;
         StartState(GameState.Wait);
     }
-
+    #endregion
 
     public void SetMyLevel(int _level, int _subLevel)
     {
         Debug.Log("SetMyLevel");
+        gameInfo.Value.myLevel = _level;
+        gameInfo.Value.mySubLevel = _subLevel;
         switch (_level)
         {
             case 0:
@@ -499,13 +564,6 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
-
-
-
-
-
-
 
     public void ChangeGameDataSetting()
     {

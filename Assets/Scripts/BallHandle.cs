@@ -7,7 +7,8 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     public PhotonView photonView;
     public string ballID;
     private BallDataWapper ballDataWapper = new BallDataWapper();
-    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    //  [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    [SerializeField] private GameInfoValue gameInfo;
     private Vector3 latestPosition;
     private Quaternion latestRotation;
     private bool gotShoot = true;
@@ -31,13 +32,11 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     {
         ball.gameObject.SetActive(false);
         ball.TARGET.gameObject.SetActive(false);
-        Debug.Log("Hide Ball");
     }
     private void ShowBall()
     {
         ball.gameObject.SetActive(true);
-        Debug.Log("Show Ball");
-        //  ball.TARGET.gameObject.SetActive(true);
+
     }
 
     public bool isSet = true;
@@ -54,10 +53,10 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
                 float yPos = ballDataWapper.up ? -4.3f : 6.7f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
                 ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
-                //  StartCoroutine(Cooldown());
+
                 isSet = true;
             }
-            SendPosition(ball.gameObject.transform.localPosition);
+            SendPositionToMaster(ball.gameObject.transform.localPosition);
         }
         else
         {
@@ -66,28 +65,14 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         }
     }
 
-    private bool lerpPo;
     void Update()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             if (!ball.gameObject.activeSelf)
                 ShowBall();
-            // if (ball.enabled)
-            //     ball.enabled = false;
-
             Vector3 currectVelocity = Vector3.zero;
-            // ball.gameObject.transform.localPosition = Vector3.MoveTowards(ball.gameObject.transform.localPosition, latestPosition, 5f * Time.deltaTime);
-            // if (!lerpPo)
-            // {
-            //     lerpPo = true;
-            //     StartCoroutine(LerpPosition(ball.gameObject.transform, ball.gameObject.transform.localPosition, latestPosition));
-            // }
             ball.gameObject.transform.localPosition = latestPosition;
-            //  ball.gameObject.transform.localRotation = Quaternion.s
-            // ball.gameObject.transform.position = Vector3.Lerp(ball.gameObject.transform.position, latestPosition, 0.4f);
-            //   ball.gameObject.transform.rotation = Quaternion.Lerp(ball.gameObject.transform.rotation, latestRotation, Time.deltaTime * 5f);
-
         }
         else
         {
@@ -101,7 +86,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     {
         if (PhotonNetwork.IsMasterClient)
         {
-
+            ball.BallAnimation();
         }
         else
         {
@@ -110,45 +95,13 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         }
     }
 
-    private IEnumerator LerpPosition(Transform obj, Vector3 start, Vector3 end, float duration = 0.1f)
-    {
-        float elapsedTime = 0f;
+    public void AddForce(Vector2 _direction, float _force) => ball.AddForce(_direction, _force);
 
-        while (elapsedTime < duration)
-        {
-            float t = elapsedTime / duration;   
-            obj.localPosition = Vector3.Lerp(start, end, t);
-            elapsedTime += Time.deltaTime;
-            yield return null; 
-        }
 
-      
-        obj.localPosition = end;
-        lerpPo = false;
-    }
-
-    public void AddForce(Vector2 _direction, float _force)
-    {
-        ball.AddForce(_direction, _force);
-    }
-    // public void AF(Vector2 _direction, float _force)
-    // {
-    //     float[] f = { _direction.x, _direction.y, _force };
-    //     photonView.RPC("RPC_AF", RpcTarget.MasterClient, f);
-    // }
-    // [PunRPC]
-    // private void RPC_AF(float[] _f)
-    // {
-       
-    //     Vector2 direction = new Vector2(_f[0], _f[1]);
-    //     float force = _f[2];
-    //     AddForce(direction, force);
-
-    // }
     public void GotShoot()
     {
-        // gotShoot = true;
-        GameManager.Instance.SetCurrentBallIndex(myPlayerDataInfo.Value.playerIndex);
+      
+        GameManager.Instance.SetCurrentBallIndex(gameInfo.Value.myPlayerIndex);
         ShowBall();
 
         StartCoroutine(GotshootCooldown());
@@ -164,8 +117,8 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     {
         ball.canTrigger = false;
         BallDataWapper ballDataWapper = new BallDataWapper();
-        ballDataWapper.playerSendIndex = myPlayerDataInfo.Value.playerIndex;
-        ballDataWapper.nextPLayerIndex = _up ? myPlayerDataInfo.Value.playerIndex + 1 : myPlayerDataInfo.Value.playerIndex - 1;
+        ballDataWapper.playerSendIndex = gameInfo.Value.myPlayerIndex;
+        ballDataWapper.nextPLayerIndex = _up ? gameInfo.Value.myPlayerIndex + 1 : gameInfo.Value.myPlayerIndex - 1;
         ballDataWapper.up = _up;
         ballDataWapper.xPosition = ball.transform.position.x;
         ballDataWapper.yPosition = ball.transform.position.y;
@@ -192,29 +145,16 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     {
 
         ballDataWapper = JsonUtility.FromJson<BallDataWapper>(_BallDataJson);
-        Debug.Log("Recive Ball From " + ballDataWapper.playerSendIndex);
+        // Debug.Log("Recive Ball From " + ballDataWapper.playerSendIndex);
 
-        if (ballDataWapper.nextPLayerIndex == myPlayerDataInfo.Value.playerIndex)
+        if (ballDataWapper.nextPLayerIndex == gameInfo.Value.myPlayerIndex)
 
         {
-            //    Debug.Log("I Am");
+        
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
-            GameManager.Instance.SetCurrentBallIndex(myPlayerDataInfo.Value.playerIndex);
+            GameManager.Instance.SetCurrentBallIndex(gameInfo.Value.myPlayerIndex);
             photonView.RPC("RPC_ReciveTakeBall", _info.Sender);
-            // if (photonView.IsMine)
-            // {
-            //     Debug.Log("Is Mine");
-
-            //     ball.canTrigger = false;
-
-            //     Debug.Log($"Ball Velocity {ballDataWapper.xVelocity} , {ballDataWapper.yVelocity}");
-            //     ball.transform.position = new Vector3(ballDataWapper.xPosition, -4.3f, 0);
-            //     ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, 10);
-            //     StartCoroutine(Cooldown());
-            // }
-
-
         }
 
     }
@@ -258,13 +198,13 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         }
     }
 
-    private void SendPosition(Vector3 _localPosition)
+    private void SendPositionToMaster(Vector3 _localPosition)
     {
         float[] position = { _localPosition.x, _localPosition.y, _localPosition.z };
         photonView.RPC("RPC_SendPosition", RpcTarget.MasterClient, position);
     }
     [PunRPC]
-    private void RPC_SendPosition(float[] _position)
+    private void RPC_ReceivePositionFormOther(float[] _position)
     {
         latestPosition = new Vector3(_position[0], _position[1], _position[2]);
     }

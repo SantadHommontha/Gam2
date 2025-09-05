@@ -3,19 +3,8 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System;
 
-[System.Serializable]
-public class SetLevelWarpper
-{
-    public SetLevel[] setLevels;
-}
 
-[System.Serializable]
-public class SetLevel
-{
-    public int targetIndex;
-    public int level;
-    public int subLevel;
-}
+
 
 [System.Serializable]
 public class MyPlayerDataInfo : PlayerData
@@ -48,7 +37,7 @@ public class TeamManager : MonoBehaviour
     private PhotonView photonView;
     public Team team = new Team();
 
-    public int playerCount;
+    public int playerCount => team.GetAllPlayer().Count;
 
 
 
@@ -56,7 +45,8 @@ public class TeamManager : MonoBehaviour
     [Space]
     [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private List<PlayerDisplayerValue> playerDisplayerValues;
-
+    [SerializeField] private GameDataValue gameData;
+    [SerializeField] private GameInfoValue gameInfo;
 
     void Awake()
     {
@@ -106,10 +96,11 @@ public class TeamManager : MonoBehaviour
             sendBackJoinTeam.playerID = playerData.playerID;
             sendBackJoinTeam.playerName = playerData.playerName;
             team.AddPlayer(playerData);
-            playerCount = team.GetAllPlayer().Count;
+            //   playerCount = team.GetAllPlayer().Count;
             sendBackJoinTeam.currentPlayer = playerCount;
             //  playerCount = team.GetAllPlayer().Count;
             //   Debug.Log("Ap: " + ap.Count);
+            PlayerUpdate();
 
         }
         else
@@ -121,41 +112,47 @@ public class TeamManager : MonoBehaviour
 
         photonView.RPC("RPC_ReciveJoinTeamStatus", _info.Sender, JsonUtility.ToJson(sendBackJoinTeam));
 
-        var allP = team.GetAllPlayer();
-        //Debug.Log($"EIEI {allP.Count}");
-        SetLevel[] setLevels = new SetLevel[allP.Count];
 
-        for (int i = 0; i < allP.Count; i++)
-        {
-          //  Debug.Log("----------------");
-            setLevels[i] = new SetLevel();
-            if (allP.Count == 1)
-            {
+        //     var allP = team.GetAllPlayer();
+        //     //Debug.Log($"EIEI {allP.Count}");
+        //     SetLevel[] setLevels = new SetLevel[allP.Count];
 
-                setLevels[i].targetIndex = i + 1;
-                setLevels[i].level = 0;
-                setLevels[i].subLevel = 0;
-            }
-            else
-            {
+        //     for (int i = 0; i < allP.Count; i++)
+        //     {
+        //       //  Debug.Log("----------------");
+        //         setLevels[i] = new SetLevel();
+        //         if (allP.Count == 1)
+        //         {
 
-                setLevels[i].targetIndex = i + 1;
-                setLevels[i].level = i == allP.Count - 1 ? 3 : i +1;
-                setLevels[i].subLevel = 0;
-            }
+        //             setLevels[i].targetIndex = i + 1;
+        //             setLevels[i].level = 0;
+        //             setLevels[i].subLevel = 0;
+        //         }
+        //         else
+        //         {
 
-        }
+        //             setLevels[i].targetIndex = i + 1;
+        //             setLevels[i].level = i == allP.Count - 1 ? 3 : i +1;
+        //             setLevels[i].subLevel = 0;
+        //         }
 
-        SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
-        setLevelWarpper.setLevels = setLevels;
-        string jsonData = JsonUtility.ToJson(setLevelWarpper);
-      //  Debug.Log($"Send JsonData: {jsonData}");
-        photonView.RPC("RPC_PlayerChange", RpcTarget.All, jsonData);
+        //     }
+
+        //     SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
+        //     setLevelWarpper.setLevels = setLevels;
+        //     string jsonData = JsonUtility.ToJson(setLevelWarpper);
+        //   //  Debug.Log($"Send JsonData: {jsonData}");
+        //     photonView.RPC("RPC_PlayerChange", RpcTarget.All, jsonData);
+    }
+
+    private void PlayerUpdate()
+    {
+        GameManager.Instance.RandomLevel(playerCount);
     }
     [PunRPC]
     private void RPC_PlayerChange(string _jsonData)
     {
-     //   Debug.Log($"Recive JsonData: {_jsonData}");
+        //   Debug.Log($"Recive JsonData: {_jsonData}");
         SetLevelWarpper setLevelWarpper = JsonUtility.FromJson<SetLevelWarpper>(_jsonData);
         foreach (var T in setLevelWarpper.setLevels)
         {
@@ -174,9 +171,13 @@ public class TeamManager : MonoBehaviour
         //  Debug.Log("ApF: " + sendBackJoinTeam.playerIndex);
         //  IReciveJoinTeams[0].ReciveJoinTeamStatus(sendBackJoinTeam);
 
+        GameManager.Instance.ReciveJoinTeamStatus(sendBackJoinTeam);
+        gameInfo.Value.playerCount = sendBackJoinTeam.currentPlayer;
+        gameInfo.Value.myPlayerIndex = sendBackJoinTeam.playerIndex;
+        gameInfo.Value.playerID = sendBackJoinTeam.playerID;
+        // myPlayerDataInfo.Value = sendBackJoinTeam;
+        //  playerCount = sendBackJoinTeam.currentPlayer;
 
-        myPlayerDataInfo.Value = sendBackJoinTeam;
-        playerCount = sendBackJoinTeam.currentPlayer;
         // if (sendBackJoinTeam.status)
         //     {
         //         GameManager.Instance.playerIndex = sendBackJoinTeam.playerIndex;
@@ -214,7 +215,7 @@ public class TeamManager : MonoBehaviour
     [PunRPC]
     private void RPC_KickPlayer()
     {
-    //    RoomManager.Instance.LeaveRoom();
+        //    RoomManager.Instance.LeaveRoom();
     }
 
     #endregion
@@ -295,7 +296,7 @@ public class TeamManager : MonoBehaviour
     {
         TeamStatus teamStatus = JsonUtility.FromJson<TeamStatus>(_jsonData);
 
-        playerCount = teamStatus.playerCount;
+        //   playerCount = teamStatus.playerCount;
     }
 
 }

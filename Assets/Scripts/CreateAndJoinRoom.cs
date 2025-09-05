@@ -15,11 +15,12 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField roomName;
 
     [Header("Value")]
-    [SerializeField] private GameDataValue gameData;
-    [SerializeField] private BoolValue isPlayer;
+   // [SerializeField] private GameDataValue gameData;
+    [SerializeField] private GameInfoValue gameInfo;
+  //  [SerializeField] private BoolValue isPlayer;
     //[SerializeField] private StringValue roomname_value;
     // [SerializeField] private BoolValue iamAdmin;
-    [SerializeField] private StringValue adminCode_value;
+    [SerializeField] private StringValue adminCode;
 
     void Awake()
     {
@@ -31,11 +32,11 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         //  PhotonNetwork.JoinOrCreateRoom("Mine", null, null);
         //  Debug.Log("CCC");
         ChangeMeassge("Create Room");
-        gameData.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
+        gameInfo.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayer;
-        gameData.Value.isAdmin = true;
-        PhotonNetwork.CreateRoom(gameData.Value.roomCode, roomOptions, TypedLobby.Default);
+        gameInfo.Value.isAdmin = true;
+        PhotonNetwork.CreateRoom(gameInfo.Value.roomCode, roomOptions, TypedLobby.Default);
     }
     private void ChangeMeassge(string _text = "")
     {
@@ -44,26 +45,21 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     }
     public void JoinRoom()
     {
-
-        // PhotonNetwork.IsMessageQueueRunning = false;
         ChangeMeassge("Join Room");
-        gameData.Value.isPlayer = true;
-        isPlayer.Value = true;
-        // gameData.Value.isPlayer = false;
+        gameInfo.Value.isPlayer = true;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
-
     }
 
     public void JoinBTN()
     {
-        if (roomName.text.ToLower() == adminCode_value.Value.ToLower())
+        if (roomName.text.ToLower() == adminCode.Value.ToLower())
         {
             CreateRoom();
         }
         else if (roomName.text.ToLower() == "onionplayer")
         {
-            gameData.Value.isPlayer = true;
-            isPlayer.Value = true;
+            gameInfo.Value.isPlayer = true;
+         //   isPlayer.Value = true;
             CreateRoom();
         }
         else

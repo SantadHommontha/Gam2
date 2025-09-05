@@ -1,25 +1,37 @@
 using UnityEngine;
 
+
 public class ShowUi : MonoBehaviour
 {
-    [SerializeField] private GameObject opneMenu;
-    [SerializeField] private GameObject openControl;
+    [SerializeField] private GameObject gameObj;
+    [SerializeField] private bool showIfPlayer;
+    [SerializeField] private bool showIfAdmin;
     [Header("Value")]
-    [SerializeField] private BoolValue isPlayer;
-    [SerializeField] private BoolValue isAdmin;
     [SerializeField] private GameDataValue gameData;
 
 
-    public void SetUp()
+    void Awake()
     {
+        if (!gameObj) gameObj = this.gameObject;
+    }
 
-        opneMenu.gameObject.SetActive(gameData.Value.isPlayer);
-        openControl.gameObject.SetActive(gameData.Value.isAdmin);
+    public void Set()
+    {
+        gameObj.SetActive(false);
+        if (showIfAdmin && gameData.Value.isAdmin)
+        {
+            gameObj.SetActive(true);
+
+        }
+        if (showIfPlayer && gameData.Value.isPlayer)
+        {
+            gameObj.SetActive(true);
+
+        }
+
+        if (!showIfAdmin && !showIfPlayer)
+            gameObj.SetActive(false);
 
     }
-    public void HideAll()
-    {
-        opneMenu.gameObject.SetActive(false);
-        openControl.gameObject.SetActive(false);
-    }
+
 }
