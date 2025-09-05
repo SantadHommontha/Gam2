@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24926c7a90c3b1246b2a58e43893b439, type: 3}
-  m_Name: AdminCode
+  m_Script: {fileID: 11500000, guid: f237d1402f863ca40a534df3a15ef595, type: 3}
+  m_Name: GameInfo
   m_EditorClassIdentifier: 
   description: 
-  value: onion
-  initialValue: onion

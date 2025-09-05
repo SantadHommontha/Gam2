@@ -69,7 +69,8 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
     [Header("Value")]
     [SerializeField] private GameDataValue gameData;
-    [SerializeField] private BoolValue isPlayer;
+    [SerializeField] private GameInfoValue gameInfo;
+    // [SerializeField] private BoolValue isPlayer;
 
     void Awake()
     {
@@ -182,7 +183,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     public void Ball_FixedUpdate()
     {
         if (!gameData.Value.gamestart) return;
-        if (!isPlayer.Value) return;
+        if (!gameInfo.Value.isPlayer) return;
         if (shot)
         {
 
@@ -218,7 +219,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     }
     void OnMouseDrag()
     {
-        if (!isPlayer.Value) return;
+        if (!gameInfo.Value.isPlayer) return;
         if (isClick)
         {
             CalculateOpposite();
@@ -309,7 +310,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             return false;
         }
 
-       
+
         RaycastHit2D hit = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
 
         if (showDebugRay)
@@ -317,7 +318,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
             Debug.DrawRay(groundCheckPoint.position, Vector2.down * groundCheckDistance, hit.collider != null ? debugRayColor : Color.red);
         }
 
-      
+
         if (hit.collider != null)
         {
             return true;

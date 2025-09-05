@@ -21,6 +21,7 @@ public class SpawnBall : MonoBehaviour
 
     [Header("Value")]
     [SerializeField] private GameDataValue gameData;
+    [SerializeField] private GameInfoValue gameInfo;
     void Awake()
     {
 
@@ -34,16 +35,18 @@ public class SpawnBall : MonoBehaviour
     }
     void Start()
     {
-
+        targetr.gameObject.SetActive(false);
     }
     void OnMouseDown()
     {
+        if (!gameInfo.Value.isPlayer) return;
         if (!gameData.Value.gamestart) return;
         isClick = true;
     }
     // Update is called once per frame
     void Update()
     {
+        if (!gameInfo.Value.isPlayer) return;
         if (!gameData.Value.gamestart) return;
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -59,6 +62,7 @@ public class SpawnBall : MonoBehaviour
             //shot = true;
             isClick = false;
             Spawn();
+            targetr.gameObject.SetActive(false);
         }
 
         if (isClick)
@@ -66,6 +70,7 @@ public class SpawnBall : MonoBehaviour
             direction = CalculateOpposite.CalculateOpposite2D(transform.position, out distance);
             distance = UnityEngine.Mathf.Clamp(distance / distanceToMaxForec, 0, distanceToMaxForec);
             force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
+            targetr.gameObject.SetActive(true);
         }
 
 
@@ -87,7 +92,7 @@ public class SpawnBall : MonoBehaviour
         ballList.Add(ballHandle);
         ballHandle.AddForce(direction, force);
         ballHandle.GotShoot();
-      
+
 
 
 

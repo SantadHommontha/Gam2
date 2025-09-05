@@ -155,6 +155,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e006786afbb8f8d47a60872b8e212514, type: 2}
   - {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
   - {fileID: 11400000, guid: 820769079f4ed584eb6a28b1b4682a2d, type: 2}
+  - {fileID: 11400000, guid: 84c25c8a8db9e6c4a8589ec1f17e40c0, type: 2}
 --- !u!4 &191723160
 Transform:
   m_ObjectHideFlags: 0
@@ -1333,9 +1334,8 @@ MonoBehaviour:
   maxPlayer: 4
   meassge: {fileID: 1718643848}
   roomName: {fileID: 1877667506}
-  gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
-  isPlayer: {fileID: 11400000, guid: 820769079f4ed584eb6a28b1b4682a2d, type: 2}
-  adminCode_value: {fileID: 11400000, guid: 8e0594478dc2da145b67a183cc49a5dd, type: 2}
+  gameInfo: {fileID: 11400000, guid: 84c25c8a8db9e6c4a8589ec1f17e40c0, type: 2}
+  adminCode: {fileID: 11400000, guid: 8e0594478dc2da145b67a183cc49a5dd, type: 2}
 --- !u!4 &1499568993
 Transform:
   m_ObjectHideFlags: 0
@@ -2489,9 +2489,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cafde14284a67ae4182f45a7ba64151f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCount: 0
   myPlayerDataInfo: {fileID: 0}
   playerDisplayerValues: []
+  gameData: {fileID: 0}
+  gameInfo: {fileID: 0}
 --- !u!4 &2034399974
 Transform:
   m_ObjectHideFlags: 0

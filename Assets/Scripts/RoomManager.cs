@@ -43,9 +43,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             TeamManager.Instance.OnNewRoom();
-            PhotonNetwork.LeaveRoom();
-            isWaitingToJoinLobby = true;
-            isWaitingToCreateRoom = true;
+            // PhotonNetwork.close;
+            createAndJoinRoom.CreateRoom();
+            // isWaitingToJoinLobby = true;
+            // isWaitingToCreateRoom = true;
         }
         else
         {
@@ -59,15 +60,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     void Update()
     {
         //  Debug.Log(PhotonNetwork.IsConnectedAndReady);
-        if (isWaitingToJoinLobby)
-        {
-            if (PhotonNetwork.IsConnectedAndReady)
-            {
-                // Debug.Log("Join======================================");
-                PhotonNetwork.JoinLobby();
-                isWaitingToJoinLobby = false;
-            }
-        }
+        // if (isWaitingToJoinLobby)
+        // {
+        //     if (PhotonNetwork.IsConnectedAndReady)
+        //     {
+        //         // Debug.Log("Join======================================");
+        //         PhotonNetwork.JoinLobby();
+        //         isWaitingToJoinLobby = false;
+        //     }
+        // }
 
     }
     public override void OnLeftRoom()

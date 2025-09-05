@@ -12,11 +12,11 @@ public class PlayerNameUI : MonoBehaviour
     [Header("Value")]
     [Space]
     [SerializeField] private StringValue value_playerName;
-    [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    [SerializeField] private GameInfoValue gameInfo;
 
     void Start()
     {
-       // sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
+        // sendBackJoinTeamValue.OnValueChange += ReciveJoinTeamStatus;
     }
     public void EnterBTN()
     {
@@ -26,7 +26,8 @@ public class PlayerNameUI : MonoBehaviour
 
         playerData.playerName = tmp_playerName.text;
         playerData.playerID = PhotonNetwork.LocalPlayer.UserId;
-
+        gameInfo.Value.playerName = tmp_playerName.text;
+        gameInfo.Value.playerID = PhotonNetwork.LocalPlayer.UserId;
         TeamManager.Instance.JoinTeam(playerData);
 
 

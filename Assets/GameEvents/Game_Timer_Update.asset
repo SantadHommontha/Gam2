@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24926c7a90c3b1246b2a58e43893b439, type: 3}
-  m_Name: AdminCode
+  m_Script: {fileID: 11500000, guid: e4b35934d41945748b97261ce0017020, type: 3}
+  m_Name: Game_Timer_Update
   m_EditorClassIdentifier: 
   description: 
-  value: onion
-  initialValue: onion
+  listeners: []

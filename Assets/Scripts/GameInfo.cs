@@ -1,17 +1,19 @@
 using UnityEngine;
-
+[System.Serializable]
 public class GameInfo
 {
     public bool isAdmin;
     public bool isPlayer;
+    public string playerName;
     public string roomCode;
     public int playerCount;
     public int myPlayerIndex;
     public int myLevel;
     public int mySubLevel;
     public string playerID;
+    public string gameState;
 
-     public GameInfo() { }
+    public GameInfo() { }
     public GameInfo(GameInfo _gameInfo)
     {
         SetData(_gameInfo);
@@ -25,7 +27,9 @@ public class GameInfo
         myPlayerIndex = _gameInfo.myPlayerIndex;
         myLevel = _gameInfo.myLevel;
         mySubLevel = _gameInfo.mySubLevel;
-         playerID = _gameInfo.playerID;
+        playerID = _gameInfo.playerID;
+        playerName = _gameInfo.playerName;
+        gameState = _gameInfo.gameState;
     }
 
 }

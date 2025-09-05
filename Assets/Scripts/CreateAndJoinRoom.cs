@@ -15,22 +15,19 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField roomName;
 
     [Header("Value")]
-   // [SerializeField] private GameDataValue gameData;
+   
     [SerializeField] private GameInfoValue gameInfo;
-  //  [SerializeField] private BoolValue isPlayer;
-    //[SerializeField] private StringValue roomname_value;
-    // [SerializeField] private BoolValue iamAdmin;
+    
     [SerializeField] private StringValue adminCode;
 
     void Awake()
     {
-        ChangeMeassge();
+        SetMeassge("");
     }
-
+    #region  CreateRoom
     public void CreateRoom()
     {
-        //  PhotonNetwork.JoinOrCreateRoom("Mine", null, null);
-        //  Debug.Log("CCC");
+      
         ChangeMeassge("Create Room");
         gameInfo.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();
@@ -38,18 +35,26 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         gameInfo.Value.isAdmin = true;
         PhotonNetwork.CreateRoom(gameInfo.Value.roomCode, roomOptions, TypedLobby.Default);
     }
-    private void ChangeMeassge(string _text = "")
+    #endregion
+    private void ChangeMeassge(string _text)
+    {
+        StartCoroutine(IE_ClearMassage(_text));
+    }
+    private void SetMeassge(string _text)
     {
         if (meassge)
             meassge.text = _text;
     }
+    #region JoinRoom
     public void JoinRoom()
     {
         ChangeMeassge("Join Room");
         gameInfo.Value.isPlayer = true;
         PhotonNetwork.JoinRoom(roomName.text.ToLower());
     }
+    #endregion
 
+    #region  UI Button
     public void JoinBTN()
     {
         if (roomName.text.ToLower() == adminCode.Value.ToLower())
@@ -59,7 +64,6 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         else if (roomName.text.ToLower() == "onionplayer")
         {
             gameInfo.Value.isPlayer = true;
-         //   isPlayer.Value = true;
             CreateRoom();
         }
         else
@@ -67,9 +71,15 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
             JoinRoom();
         }
 
-
-
     }
+
+    public void BackBtn()
+    {
+        SceneManager.LoadScene("Loading");
+    }
+    #endregion
+
+    #region CallBack Function
     public override void OnCreatedRoom()
     {
 
@@ -85,22 +95,15 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         ChangeMeassge("Not Found Room");
-        StartCoroutine(IE_Cooldown());
+        // StartCoroutine(IE_Cooldown());
 
     }
-
-    private IEnumerator IE_Cooldown()
+    #endregion
+    private IEnumerator IE_ClearMassage(string _text)
     {
+        SetMeassge(_text);
         yield return new WaitForSeconds(3f);
-        ChangeMeassge();
+        SetMeassge("");
     }
-    public void BackBtn()
-    {
 
-
-        SceneManager.LoadScene("Loading");
-
-
-
-    }
 }

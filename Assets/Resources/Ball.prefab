@@ -261,7 +261,7 @@ MonoBehaviour:
   ball: {fileID: 3514205473754882231}
   photonView: {fileID: 2301562080628136443}
   ballID: 
-  myPlayerDataInfo: {fileID: 11400000, guid: 3a7e40e874090f24b90529310c860735, type: 2}
+  gameInfo: {fileID: 11400000, guid: 84c25c8a8db9e6c4a8589ec1f17e40c0, type: 2}
   isSet: 1
 --- !u!114 &2301562080628136443
 MonoBehaviour:
@@ -478,7 +478,7 @@ MonoBehaviour:
   OnFailAnimation: {fileID: 3105441459338391712}
   OnHitGroundAnimation: {fileID: 8184686972000957270}
   gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
-  isPlayer: {fileID: 11400000, guid: 820769079f4ed584eb6a28b1b4682a2d, type: 2}
+  gameInfo: {fileID: 11400000, guid: 84c25c8a8db9e6c4a8589ec1f17e40c0, type: 2}
 --- !u!114 &7781653609822182733
 MonoBehaviour:
   m_ObjectHideFlags: 0

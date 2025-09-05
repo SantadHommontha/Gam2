@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+
 [System.Serializable]
 public class SetLevelWarpper
 {
@@ -43,7 +44,7 @@ public class GameDataWapper
 //     public string roomCode;
 //     public bool spacetator;
 //     public string gameState;
-    
+
 //     public GameData() { }
 //     public GameData(GameData _gameData)
 //     {
@@ -71,7 +72,7 @@ public enum GameState
     Play,
     Over
 }
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public bool isPlayer;
     public static GameManager Instance;
@@ -88,9 +89,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameSetting gameSetting;
 
-    private PhotonView photonView;
+
     [Header("Value")]
-   // [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
+    // [SerializeField] private MyPlayerDataInfoValue myPlayerDataInfo;
     [SerializeField] private GameDataValue gameData;
     [SerializeField] private GameInfoValue gameInfo;
     // [SerializeField] private BoolValue isPlayerValue;
@@ -104,6 +105,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameEvent gameOver;
     [SerializeField] private GameEvent setGame;
     [SerializeField] private GameEvent playGame;
+    [SerializeField] private GameEvent spacetator;
     [Header("Leavel")]
 
     [SerializeField] private List<GameEvent> level1Player;
@@ -125,6 +127,8 @@ public class GameManager : MonoBehaviour
     {
         EndState();
         gameState = _newState;
+        gameData.Value.gameState = _newState;
+        gameInfo.Value.gameState = _newState;
         //   Debug.Log($"New State {gameState}");
         switch (gameState)
         {
@@ -154,6 +158,7 @@ public class GameManager : MonoBehaviour
 
                 gameData.Value.gamestart = false;
                 gameData.Value.gamescore = 0;
+                gameData.Value.gameTime = gameSetting.gameTime;
                 gameData.Value.gametimer = gameSetting.gameTime;
                 gameData.Value.usetime = 0;
                 setGame.Raise(this);
@@ -176,6 +181,7 @@ public class GameManager : MonoBehaviour
 
                 gameData.Value.gamestart = false;
                 gameData.Value.gamescore = 0;
+                gameData.Value.gameTime = gameSetting.gameTime;
                 gameData.Value.gametimer = gameSetting.gameTime;
                 gameData.Value.usetime = 0;
 
@@ -232,11 +238,12 @@ public class GameManager : MonoBehaviour
 
 
                 gameData.Value.gamestart = true;
-                gameTimer.SetTime(gameSetting.gameTime);
-                gameTimer.StartTimer();
+
                 if (PhotonNetwork.IsMasterClient)
                 {
                     SendGameData(gameData.Value);
+                    gameTimer.SetTime(gameSetting.gameTime);
+                    gameTimer.StartTimer();
                     ChangeObserverSceneToCurrentBall(1);
                 }
 
@@ -255,6 +262,8 @@ public class GameManager : MonoBehaviour
                 {
                     //     Scene_Game_All_UI.Instance.backBtn_text.text = "Back";
                     SpawnBall.Instance.RemoveAllBall();
+                    gameTimer.StopTimer();
+                    GameOver();
                 }
                 // else
                 // {
@@ -262,7 +271,7 @@ public class GameManager : MonoBehaviour
                 // }
 
 
-                gameTimer.StopTimer();
+
                 gameData.Value.gamestart = false;
 
 
@@ -325,7 +334,7 @@ public class GameManager : MonoBehaviour
         else
             Instance = this;
 
-        photonView = GetComponent<PhotonView>();
+
     }
     void Start()
     {
@@ -335,9 +344,9 @@ public class GameManager : MonoBehaviour
             PhotonNetwork.IsMessageQueueRunning = true;
 
 
-        if (gameData.Value.isAdmin)
+        if (gameInfo.Value.isAdmin)
         {
-            if (gameData.Value.isPlayer)
+            if (gameInfo.Value.isPlayer)
                 StartState(GameState.EnterName);
             else
                 StartState(GameState.SetGame);
@@ -348,7 +357,7 @@ public class GameManager : MonoBehaviour
         {
             StartState(GameState.EnterName);
         }
-   //     myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
+        //     myPlayerDataInfo.OnValueChange += ReciveJoinTeamStatus;
         //   StartState(GameState.Play);
     }
 
@@ -378,33 +387,60 @@ public class GameManager : MonoBehaviour
     {
         SetLevel[] setLevels = new SetLevel[_playerCount];
 
-        Func<int, (int, int)> _level = (_index) =>
-        {
-            if (_index == 1) return (1, RamdomLevel(level1));
-            else if (_index == 2) return (2, RamdomLevel(level2));
-            else return (3, RamdomLevel(level3));
-        };
+        // Func<int, (int, int)> _level = (_index) =>
+        // {
+        //     if (_index == 1) return (1, RamdomLevel(level1));
+        //     else if (_index == 2) return (2, RamdomLevel(level2));
+        //     else return (3, RamdomLevel(level3));
+        // };
 
-        if (_playerCount == 1)
+        // if (_playerCount == 1)
+        // {
+        //     setLevels[0] = new SetLevel();
+        //     setLevels[0].targetIndex = 1;
+        //     setLevels[0].level = 0;
+        //     setLevels[0].subLevel = RamdomLevel(level1Player);
+        // }
+        // else if (_playerCount > 1)
+        // {
+        //     for (int i = 0; i < _playerCount; i++)
+        //     {
+        //         setLevels[i] = new SetLevel();
+
+
+        //         setLevels[i].targetIndex = i + 1;
+        //         var lv = _level(i + 1);
+        //         setLevels[i].level = lv.Item1;
+        //         if (i == _playerCount - 1)
+        //         {
+        //              setLevels[i].level = i  + 1 
+        //         }
+        //         setLevels[i].subLevel = lv.Item2;
+
+        //     }
+        // }
+
+        for (int i = 0; i < _playerCount; i++)
         {
-            setLevels[0].targetIndex = 1;
-            setLevels[0].level = 0;
-            setLevels[0].subLevel = RamdomLevel(level1Player);
-        }
-        else if (_playerCount > 0)
-        {
-            for (int i = 0; i < _playerCount; i++)
+
+            setLevels[i] = new SetLevel();
+            if (_playerCount == 1)
             {
-                setLevels[i] = new SetLevel();
-
 
                 setLevels[i].targetIndex = i + 1;
-                var lv = _level(i + 1);
-                setLevels[i].level = lv.Item1;
-                setLevels[i].subLevel = lv.Item2;
-
+                setLevels[i].level = 0;
+                setLevels[i].subLevel = 0;
             }
+            else
+            {
+
+                setLevels[i].targetIndex = i + 1;
+                setLevels[i].level = i == _playerCount - 1 ? 3 : i + 1;
+                setLevels[i].subLevel = 0;
+            }
+
         }
+
 
         SetLevelWarpper setLevelWarpper = new SetLevelWarpper();
         setLevelWarpper.setLevels = setLevels;
@@ -462,6 +498,9 @@ public class GameManager : MonoBehaviour
     public void NewRoom()
     {
         RoomManager.Instance.NewRoom();
+        gameData.Value.gamestart = false;
+        gameData.Value.gameTime = gameSetting.gameTime;
+        gameData.Value.gamescore = 0;
 
     }
     public void LeaveBTN()
@@ -480,7 +519,8 @@ public class GameManager : MonoBehaviour
         StartState(GameState.Play);
         if (gameData.Value.spacetator)
         {
-            gamgeControl.SetActive(false);
+            //gamgeControl.SetActive(false);
+            spacetator.Raise(this);
         }
     }
     public void ResetGame()
@@ -513,7 +553,7 @@ public class GameManager : MonoBehaviour
         GameData gameDataWapper = JsonUtility.FromJson<GameData>(_dataJson);
         this.gameData.Value.SetData(gameDataWapper);
 
-        StartState(gameData.Value.gameState);
+        //  StartState(gameData.Value.gameState);
 
         // if (gameDataWapper.gameStart)
         // {
@@ -664,8 +704,25 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-
+        photonView.RPC("RPC_GameOver", RpcTarget.Others);
+    }
+    [PunRPC]
+    private void RPC_GameOver()
+    {
+        StartState(GameState.Over);
     }
 
+    public void GameTimerUpdate(Component _sender, object _timer)
+    {
+        gameData.Value.gametimer = (float)_timer;
+        gameData.Value.usetime = gameData.Value.gameTime - gameData.Value.gametimer;
+        SendTimer(gameData.Value.gametimer);
+    }
+    private void SendTimer(float _timer) => photonView.RPC("RPC_ReceiveTimer", RpcTarget.Others, _timer);
+    [PunRPC]
+    private void RPC_ReceiveTimer(float _timer)
+    {
+        gameData.Value.gametimer = _timer;
+    }
 
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(menuName = "Values/GameDataValue")]
+[CreateAssetMenu(menuName = "Values/GameInfoValue")]
 public class GameInfoValue : ScriptableValue<GameInfo>
 {
     [SerializeField] private GameInfo initialValue;

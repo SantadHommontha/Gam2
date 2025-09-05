@@ -7,7 +7,7 @@ public class ShowUi : MonoBehaviour
     [SerializeField] private bool showIfPlayer;
     [SerializeField] private bool showIfAdmin;
     [Header("Value")]
-    [SerializeField] private GameDataValue gameData;
+    [SerializeField] private GameInfoValue gameInfo;
 
 
     void Awake()
@@ -18,12 +18,12 @@ public class ShowUi : MonoBehaviour
     public void Set()
     {
         gameObj.SetActive(false);
-        if (showIfAdmin && gameData.Value.isAdmin)
+        if (showIfAdmin && gameInfo.Value.isAdmin)
         {
             gameObj.SetActive(true);
 
         }
-        if (showIfPlayer && gameData.Value.isPlayer)
+        if (showIfPlayer && gameInfo.Value.isPlayer)
         {
             gameObj.SetActive(true);
 

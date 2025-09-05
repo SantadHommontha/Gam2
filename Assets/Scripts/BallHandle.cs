@@ -201,7 +201,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     private void SendPositionToMaster(Vector3 _localPosition)
     {
         float[] position = { _localPosition.x, _localPosition.y, _localPosition.z };
-        photonView.RPC("RPC_SendPosition", RpcTarget.MasterClient, position);
+        photonView.RPC("RPC_ReceivePositionFormOther", RpcTarget.MasterClient, position);
     }
     [PunRPC]
     private void RPC_ReceivePositionFormOther(float[] _position)

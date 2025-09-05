@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 
@@ -9,24 +10,25 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Events/Game Event")]
 public class GameEvent : ScriptableObject
 {
-    [SerializeField] [TextArea] private string description;
+    [SerializeField][TextArea] private string description;
     public List<GameEventListener> listeners = new List<GameEventListener>();
+   
 
-    public void Raise(Component _sender,object _data)
+    public void Raise(Component _sender, object _data)
     {
-           foreach (var t in listeners)
-           {
-               t.OnEventRised(_sender, _data);
-           }
+        foreach (var t in listeners)
+        {
+            t.OnEventRised(_sender, _data);
+        }
 
     }
-    
-     public void Raise(Component _sender)
+
+    public void Raise(Component _sender)
     {
-           foreach (var t in listeners)
-           {
-               t.OnEventRised(_sender, -979);
-           }
+        foreach (var t in listeners)
+        {
+            t.OnEventRised(_sender, -979);
+        }
 
     }
 
@@ -41,12 +43,12 @@ public class GameEvent : ScriptableObject
 
     public void UnregisterListener(GameEventListener _gameEventListener)
     {
-         if (listeners.Contains(_gameEventListener))
-          {
-              listeners.Remove(_gameEventListener);
-          }  
+        if (listeners.Contains(_gameEventListener))
+        {
+            listeners.Remove(_gameEventListener);
+        }
 
-     
+
     }
 
 

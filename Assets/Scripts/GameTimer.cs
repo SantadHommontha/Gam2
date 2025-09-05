@@ -10,7 +10,7 @@ public class GameTimer : MonoBehaviour
     protected Coroutine coroutineTimeUpdate;
     [Header("Value")]
     //[SerializeField] private FloatValue gametimer;
-    [SerializeField] private GameDataValue gamedata;
+    //[SerializeField] private GameDataValue gamedata;
     [Header("Event")]
     [SerializeField] protected GameEvent timerUpdateEvent;
 
@@ -45,8 +45,8 @@ public class GameTimer : MonoBehaviour
                 timerUpdateEvent.Raise(this, timer);
 
             timer -= fetchTimer;
-            gamedata.Value.gametimer = timer;
-            gamedata.Value.usetime += fetchTimer;
+            // gamedata.Value.gametimer = timer;
+            // gamedata.Value.usetime += fetchTimer;
         }
         if (timerUpdateEvent)
             timerUpdateEvent.Raise(this, timer);

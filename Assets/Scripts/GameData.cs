@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class GameData
 {
     public int gamescore;
+    public float gameTime;
     public float gametimer;
     public float usetime;
     public bool gamestart;
@@ -23,6 +24,7 @@ public class GameData
     public void SetData(GameData _gameData)
     {
         gamescore = _gameData.gamescore;
+        gameTime = _gameData.gameTime;
         gametimer = _gameData.gametimer;
         usetime = _gameData.usetime;
         gamestart = _gameData.gamestart;
@@ -30,5 +32,6 @@ public class GameData
         roomCode = _gameData.roomCode;
         spacetator = _gameData.spacetator;
         isPlayer = _gameData.isPlayer;
+         gameState = _gameData.gameState;
     }
 }

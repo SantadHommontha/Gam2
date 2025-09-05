@@ -100,7 +100,7 @@ public class TeamManager : MonoBehaviour
             sendBackJoinTeam.currentPlayer = playerCount;
             //  playerCount = team.GetAllPlayer().Count;
             //   Debug.Log("Ap: " + ap.Count);
-            PlayerUpdate();
+
 
         }
         else
@@ -110,9 +110,11 @@ public class TeamManager : MonoBehaviour
             sendBackJoinTeam.playerIndex = -1;
         }
 
+
+        gameInfo.Value.playerCount = playerCount;
         photonView.RPC("RPC_ReciveJoinTeamStatus", _info.Sender, JsonUtility.ToJson(sendBackJoinTeam));
 
-
+        PlayerUpdate();
         //     var allP = team.GetAllPlayer();
         //     //Debug.Log($"EIEI {allP.Count}");
         //     SetLevel[] setLevels = new SetLevel[allP.Count];
@@ -175,6 +177,7 @@ public class TeamManager : MonoBehaviour
         gameInfo.Value.playerCount = sendBackJoinTeam.currentPlayer;
         gameInfo.Value.myPlayerIndex = sendBackJoinTeam.playerIndex;
         gameInfo.Value.playerID = sendBackJoinTeam.playerID;
+        gameInfo.Value.playerName = sendBackJoinTeam.playerName;
         // myPlayerDataInfo.Value = sendBackJoinTeam;
         //  playerCount = sendBackJoinTeam.currentPlayer;
 
@@ -215,7 +218,7 @@ public class TeamManager : MonoBehaviour
     [PunRPC]
     private void RPC_KickPlayer()
     {
-        //    RoomManager.Instance.LeaveRoom();
+        RoomManager.Instance.LeaveRoom();
     }
 
     #endregion
