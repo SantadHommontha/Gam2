@@ -35,7 +35,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
 
         PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("Loading");
+        SceneManager.LoadScene("Loading 1");
     }
 
     public void NewRoom()
@@ -101,7 +101,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             isWaitingToCreateRoom = false;
             isWaitingToJoinLobby = false;
-            PhotonNetwork.LoadLevel("Game");
+            PhotonNetwork.LoadLevel("Game 1");
         }
 
 

@@ -12,7 +12,7 @@ public class JoinLobby : MonoBehaviourPunCallbacks,IScreenDown
 
         if (PhotonNetwork.IsConnected)
         {
-            SceneManager.LoadScene("Lobby");
+            SceneManager.LoadScene("Lobby 1");
         }
         else
         {

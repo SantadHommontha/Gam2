@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 523061e695f1fc24e873f8c8f618cce8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0380a4389a08f5046b501743276d030c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -319,7 +319,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.69445, y: 0.69445, z: 1.3889}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3442003969815574239}
@@ -369,7 +369,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 523061e695f1fc24e873f8c8f618cce8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0380a4389a08f5046b501743276d030c, type: 3}
   m_Color: {r: 1, g: 0.7881213, b: 0.4669811, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Shoot
   animationFrames:
-  - {fileID: 21300000, guid: 523061e695f1fc24e873f8c8f618cce8, type: 3}
+  - {fileID: 21300000, guid: 0380a4389a08f5046b501743276d030c, type: 3}
   frameRate: 0.1
   spriteRenderer: {fileID: 317568446623152189}
   currentState: 0
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Fall
   animationFrames:
-  - {fileID: 21300000, guid: 255f1e0ff526dbd49bf81f2dd05ecdf4, type: 3}
+  - {fileID: 21300000, guid: 25e161c98b515e44dbd12655578311e3, type: 3}
   frameRate: 0.1
   spriteRenderer: {fileID: 317568446623152189}
   currentState: 0
@@ -529,7 +529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: HitGround
   animationFrames:
-  - {fileID: 21300000, guid: 1571c8285453a384cb6b046c1fc5aa79, type: 3}
+  - {fileID: 21300000, guid: 2799e157ccb401741a66c95b8dbe2c60, type: 3}
   frameRate: 0.1
   spriteRenderer: {fileID: 317568446623152189}
   currentState: 0

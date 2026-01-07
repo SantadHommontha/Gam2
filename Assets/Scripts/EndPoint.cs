@@ -16,8 +16,8 @@ public class EndPoint : MonoBehaviour
         if (collision.TryGetComponent<Ball>(out var ball))
         {
             //    Debug.Log("EndPoint Touching In");
-            GameManager.Instance.AddScore();
             ball.ballHandle.OnTouchEndPoint();
+            GameManager.Instance.AddScore();
         }
     }
 
