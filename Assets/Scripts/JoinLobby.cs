@@ -1,11 +1,11 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 
-public class JoinLobby : MonoBehaviourPunCallbacks, IPointerDownHandler
+
+public class JoinLobby : MonoBehaviourPunCallbacks,IScreenDown
 {
-
+   
     void Start()
     {
         // PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = "asia";
@@ -33,13 +33,11 @@ public class JoinLobby : MonoBehaviourPunCallbacks, IPointerDownHandler
         Debug.Log("Join lobby");
         //  
     }
-    private void OnTapScreen()
-    {
-        SceneManager.LoadScene("Lobby 1");
+   
+   
 
-    }
-    public void OnPointerDown(PointerEventData eventData)
+    public void TapScreen()
     {
-        OnTapScreen();
+       SceneManager.LoadScene("Lobby 1");
     }
 }

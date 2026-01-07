@@ -75,7 +75,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 
     public void BackBtn()
     {
-        SceneManager.LoadScene("Loading");
+        SceneManager.LoadScene("Loading 1");
     }
     #endregion
 
@@ -84,13 +84,13 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     {
 
         Debug.Log("Create Room");
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("Game 1");
 
     }
     public override void OnJoinedRoom()
     {
         Debug.Log("Join Room");
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("Game 1");
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {

@@ -339,7 +339,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         if (!PhotonNetwork.InRoom)
-            SceneManager.LoadScene("Loading");
+            SceneManager.LoadScene("Loading 1");
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
