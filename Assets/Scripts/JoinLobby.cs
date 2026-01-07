@@ -1,8 +1,9 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
-public class JoinLobby : MonoBehaviourPunCallbacks
+public class JoinLobby : MonoBehaviourPunCallbacks, IPointerDownHandler
 {
 
     void Start()
@@ -30,11 +31,15 @@ public class JoinLobby : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Join lobby");
-        SceneManager.LoadScene("Lobby");
+        //  
+    }
+    private void OnTapScreen()
+    {
+        SceneManager.LoadScene("Lobby 1");
 
     }
-
-
-
-
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        OnTapScreen();
+    }
 }
