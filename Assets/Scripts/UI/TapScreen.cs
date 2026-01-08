@@ -1,12 +1,16 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class TapScreen : MonoBehaviour,IPointerDownHandler
 {
-    public JoinLobby joinLobby;
+    public UnityEvent unityEvent;
+  //  public JoinLobby joinLobby;
     public void OnPointerDown(PointerEventData eventData)
     {
-       joinLobby.TapScreen();
+      
+      unityEvent?.Invoke();
+      // joinLobby.TapScreen();
     }
 
     
