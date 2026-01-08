@@ -1404,10 +1404,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1037204335}
-  - {fileID: 1109419868}
-  - {fileID: 1512880262}
-  - {fileID: 136393871}
+  - {fileID: 172458479}
   m_Father: {fileID: 13682118}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2828,11 +2825,11 @@ RectTransform:
   m_LocalScale: {x: 1.6628, y: 1.6628, z: 1.6628}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 68533371}
+  m_Father: {fileID: 172458479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -905.93, y: -258}
+  m_AnchoredPosition: {x: -757.1, y: -123.19849}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &136393872
@@ -3048,6 +3045,45 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -163}
   m_SizeDelta: {x: 682.66003, y: 170.66501}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &172458478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 172458479}
+  m_Layer: 5
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &172458479
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172458478}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1037204335}
+  - {fileID: 1109419868}
+  - {fileID: 1512880262}
+  - {fileID: 136393871}
+  m_Father: {fileID: 68533371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -74.41499, y: -95.89451}
+  m_SizeDelta: {x: 936.73193, y: 164.76851}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &181433926
 GameObject:
@@ -16167,11 +16203,11 @@ RectTransform:
   - {fileID: 1195834622}
   - {fileID: 1507579351}
   - {fileID: 124176234}
-  m_Father: {fileID: 68533371}
+  m_Father: {fileID: 172458479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -198.83005, y: 49.999977}
+  m_AnchoredPosition: {x: -50.00003, y: 106.987526}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1037204336
@@ -17132,11 +17168,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2113343729}
-  m_Father: {fileID: 68533371}
+  m_Father: {fileID: 172458479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 137.41159, y: 54.599976}
+  m_AnchoredPosition: {x: 137.41156, y: 111.58746}
   m_SizeDelta: {x: 77.5154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1109419869
@@ -18119,7 +18155,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1191039973}
         m_TargetAssemblyTypeName: Display_Value, Assembly-CSharp
@@ -22111,11 +22147,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1010525278}
-  m_Father: {fileID: 68533371}
+  m_Father: {fileID: 172458479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 346.84766, y: 50}
+  m_AnchoredPosition: {x: 346.84763, y: 106.98749}
   m_SizeDelta: {x: 134.4313, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1512880263
@@ -27649,7 +27685,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 736072045}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine

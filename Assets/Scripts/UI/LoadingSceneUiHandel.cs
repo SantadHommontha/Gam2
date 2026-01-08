@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System.Collections;
 
 public class LoadingSceneUiHandel : MonoBehaviour
 {
@@ -8,10 +9,11 @@ public class LoadingSceneUiHandel : MonoBehaviour
     [SerializeField] private GameObject tutorialCanvas;
     [SerializeField] private GameObject childayCanvas;
 
-
+    private bool hideLoadingBar = false;
     [SerializeField] private JoinLobby joinLobby;
     [SerializeField] private MovingCurtain movingCurtain;
     [SerializeField] private Image loadBar;
+    [SerializeField] private GameObject loadingGroup;
     [SerializeField] private TapScreen tapScreenOnLoaddingScene;
     void Start()
     {
@@ -20,7 +22,7 @@ public class LoadingSceneUiHandel : MonoBehaviour
         tutorialCanvas.SetActive(false);
         childayCanvas.SetActive(false);
 
-tapScreenOnLoaddingScene.enabled = false;
+        tapScreenOnLoaddingScene.enabled = false;
 
     }
 
@@ -32,6 +34,11 @@ tapScreenOnLoaddingScene.enabled = false;
 
             if (loadBar.fillAmount >= 1)
             {
+                if (!hideLoadingBar)
+                {
+                    hideLoadingBar = true;
+                    StartCoroutine(CountDown());
+                }
                 movingCurtain.canmove = true;
                 tapScreenOnLoaddingScene.enabled = true;
             }
@@ -41,5 +48,11 @@ tapScreenOnLoaddingScene.enabled = false;
                 loadingCanvas.SetActive(false);
             }
         }
+    }
+    private IEnumerator CountDown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        loadingGroup.SetActive(false);
+        hideLoadingBar = true;
     }
 }
