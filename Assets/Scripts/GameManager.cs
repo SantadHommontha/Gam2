@@ -525,6 +525,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public void ResetGame()
     {
+        gameData.Value.gamestart = false;
+        gameData.Value.gamescore = 0;
+        gameData.Value.gameTime = gameSetting.gameTime;
+        gameData.Value.gametimer = gameSetting.gameTime;
+        gameData.Value.usetime = 0;
         StartState(GameState.Wait);
         if (PhotonNetwork.IsMasterClient)
             photonView.RPC("RPC_ResetGame", RpcTarget.Others);
