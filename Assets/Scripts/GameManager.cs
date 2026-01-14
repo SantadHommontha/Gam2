@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             case "Play":
 
                 // Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
-
+               
 
                 gameData.Value.gamestart = true;
 
@@ -246,7 +246,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                     gameTimer.StartTimer();
                     ChangeObserverSceneToCurrentBall(1);
                 }
-
+                if (gameData.Value.spacetator)
+                {
+                    //gamgeControl.SetActive(false);
+                    spacetator.Raise(this);
+                }
                 playGame.Raise(this);
 
                 //   RamdomLevel(level1).Raise(this, -979);
@@ -517,11 +521,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void GameStart()
     {
         StartState(GameState.Play);
-        if (gameData.Value.spacetator)
-        {
-            //gamgeControl.SetActive(false);
-            spacetator.Raise(this);
-        }
+
     }
     public void ResetGame()
     {

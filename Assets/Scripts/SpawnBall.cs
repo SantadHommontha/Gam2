@@ -68,8 +68,9 @@ public class SpawnBall : MonoBehaviour
         if (isClick)
         {
             direction = CalculateOpposite.CalculateOpposite2D(transform.position, out distance);
-            distance = UnityEngine.Mathf.Clamp(distance / distanceToMaxForec, 0, distanceToMaxForec);
+            distance = UnityEngine.Mathf.Clamp(distance / distanceToMaxForec, 0, 1);
             force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
+            Debug.Log($"Dis:{distance} - {force} ");
             targetr.gameObject.SetActive(true);
         }
 

@@ -18,6 +18,19 @@ public class GameInfo
     {
         SetData(_gameInfo);
     }
+    public static void SetToDefualtValue(GameInfo _data)
+    {
+        _data.isAdmin = false;
+        _data.isPlayer = false;
+        _data.roomCode = "";
+        _data.playerCount = 0;
+        _data.myPlayerIndex = 0;
+        _data.myLevel = 0;
+        _data.mySubLevel = 0;
+        _data.playerID = "";
+        _data.playerName = "";
+        _data.gameState = "";
+    }
     public void SetData(GameInfo _gameInfo)
     {
         isAdmin = _gameInfo.isAdmin;

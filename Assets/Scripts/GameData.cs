@@ -21,6 +21,19 @@ public class GameData
     {
         SetData(_gameData);
     }
+    public static void SetToDefualtValue(GameData _data)
+    {
+        _data.gamescore = 0;
+        _data.gameTime = 0;
+        _data.gametimer = 0;
+        _data.usetime = 0;
+        _data.gamestart = false;
+        _data.isAdmin = false;
+        _data.roomCode = "";
+        _data.spacetator = false;
+        _data.isPlayer = false;
+        _data.gameState = "";
+    }
     public void SetData(GameData _gameData)
     {
         gamescore = _gameData.gamescore;
@@ -32,6 +45,6 @@ public class GameData
         roomCode = _gameData.roomCode;
         spacetator = _gameData.spacetator;
         isPlayer = _gameData.isPlayer;
-         gameState = _gameData.gameState;
+        gameState = _gameData.gameState;
     }
 }

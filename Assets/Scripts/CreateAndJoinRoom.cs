@@ -15,9 +15,9 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField roomName;
 
     [Header("Value")]
-   
+
     [SerializeField] private GameInfoValue gameInfo;
-    
+
     [SerializeField] private StringValue adminCode;
 
     void Awake()
@@ -27,7 +27,7 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     #region  CreateRoom
     public void CreateRoom()
     {
-      
+        GameInfo.SetToDefualtValue(gameInfo.Value);
         ChangeMeassge("Create Room");
         gameInfo.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
         RoomOptions roomOptions = new RoomOptions();

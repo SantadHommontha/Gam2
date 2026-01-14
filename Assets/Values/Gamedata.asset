@@ -15,16 +15,18 @@ MonoBehaviour:
   description: 
   value:
     gamescore: 0
+    gameTime: 0
     gametimer: 0
     usetime: 0
     gamestart: 0
     isAdmin: 0
-    isPlayer: 1
-    roomCode: gyuw
+    isPlayer: 0
+    roomCode: 
     spacetator: 0
     gameState: 
   initialValue:
     gamescore: 0
+    gameTime: 0
     gametimer: 0
     usetime: 0
     gamestart: 0

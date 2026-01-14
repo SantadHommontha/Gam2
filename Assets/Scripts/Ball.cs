@@ -21,7 +21,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
     [Header("Public")]
     [SerializeField] private float maxForce = 10;
     [SerializeField] private float maxHeightScreen = 8.2f;
-    [SerializeField] private float distanceToMaxForec = 2f;
+    [SerializeField] private float distanceToMaxForec = 1f;
     public Rigidbody2D rb;
     public Transform TARGET;
     [SerializeField] private bool isClick = false;
@@ -246,7 +246,7 @@ public class Ball : MonoBehaviour, IPunInstantiateMagicCallback
 
         this.oppositeDirection = oppositeDirection;
 
-        float distance = UnityEngine.Mathf.Clamp(vectorToMouse.magnitude / distanceToMaxForec, 0, distanceToMaxForec);
+        float distance = UnityEngine.Mathf.Clamp(vectorToMouse.magnitude / distanceToMaxForec, 0, 1);
 
         this.force = UnityEngine.Mathf.Clamp(maxForce * distance, 0, maxForce);
 
