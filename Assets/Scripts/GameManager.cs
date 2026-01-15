@@ -730,4 +730,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameData.Value.gametimer = _timer;
     }
 
+    public void EnterSpaceTator()
+    {
+        spacetator.Raise(this);
+    }
 }

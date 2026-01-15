@@ -12111,10 +12111,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5f1a0f054520dc48957fe3c6b95b01e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggle: {fileID: 0}
+  toggle: {fileID: 1534332020}
   gameDataValue: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
   controlUI: {fileID: 736072045}
   gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
+  setTrueOnStart: 1
 --- !u!114 &756210769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12159,18 +12160,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1166743688}
-        m_TargetAssemblyTypeName: Spectator, Assembly-CSharp
-        m_MethodName: Setup
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 756210768}
         m_TargetAssemblyTypeName: Spectator, Assembly-CSharp
         m_MethodName: EnterSpactator

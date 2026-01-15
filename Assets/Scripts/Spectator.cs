@@ -9,6 +9,16 @@ public class Spectator : MonoBehaviour
     [SerializeField] private GameObject controlUI;
     [SerializeField] private GameDataValue gameData;
 
+    [Space]
+    [SerializeField] private bool setTrueOnStart;
+
+    private void Start()
+    {
+        if (setTrueOnStart)
+        {
+            Setup();
+        }
+    }
     public void Setup()
     {
         toggle.isOn = true;
@@ -25,7 +35,7 @@ public class Spectator : MonoBehaviour
         if (!gameData.Value.gamestart) return;
         Setup();
         controlUI.SetActive(false);
-
+        GameManager.Instance.EnterSpaceTator();
     }
 
 }
