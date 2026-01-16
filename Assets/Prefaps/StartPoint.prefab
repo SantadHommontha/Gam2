@@ -143,7 +143,7 @@ MonoBehaviour:
   spawnPosition: {fileID: 444950223825959426}
   targetr: {fileID: 8754264353989149492}
   distanceToMaxForec: 0.3
-  maxForce: 5
+  maxForce: 8
   ballList: []
   gameData: {fileID: 11400000, guid: dc6da9aedfa03354b9f9724a0327d7b5, type: 2}
   gameInfo: {fileID: 11400000, guid: 84c25c8a8db9e6c4a8589ec1f17e40c0, type: 2}

@@ -15,7 +15,8 @@ public class SpawnBall : MonoBehaviour
 
     private bool isClick;
 
-    [SerializeField] private List<BallHandle> ballList = new List<BallHandle>();
+    public List<BallHandle> ballList = new List<BallHandle>();
+
     private Vector3 direction;
     private float distance;
 

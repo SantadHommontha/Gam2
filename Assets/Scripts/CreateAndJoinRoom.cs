@@ -48,9 +48,17 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
     #region JoinRoom
     public void JoinRoom()
     {
+        if(PhotonNetwork.InLobby)
+        {
         ChangeMeassge("Join Room");
         gameInfo.Value.isPlayer = true;
-        PhotonNetwork.JoinRoom(roomName.text.ToLower());
+        PhotonNetwork.JoinRoom(roomName.text.ToLower());    
+        }
+        else
+        {
+             ChangeMeassge("Your are Disconnect Form Server");
+        }
+        
     }
     #endregion
 

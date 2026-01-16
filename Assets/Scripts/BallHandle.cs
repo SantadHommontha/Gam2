@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObservable
 {
     [SerializeField] private Ball ball;
@@ -11,6 +12,11 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     [SerializeField] private GameInfoValue gameInfo;
     private Vector3 latestPosition;
     private Quaternion latestRotation;
+
+    public static List<Ball> allball = new List<Ball>();
+
+
+
     private bool gotShoot = true;
     void Awake()
     {
@@ -21,11 +27,27 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         latestPosition = ball.gameObject.transform.position;
         latestRotation = ball.gameObject.transform.rotation;
 
+        AddToList();
 
         if (PhotonNetwork.IsMasterClient)
         {
             ball.gameObject.GetComponent<CircleCollider2D>().enabled = false;
             ball.rb.simulated = false;
+        }
+    }
+    private void AddToList()
+    {
+        if (!allball.Contains(ball))
+        {
+            allball.Add(ball);
+        }
+    }
+
+    private void RemoveInList()
+    {
+        if (allball.Contains(ball))
+        {
+            allball.Remove(ball);
         }
     }
     private void HideBall()
@@ -100,7 +122,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
 
     public void GotShoot()
     {
-      
+
         GameManager.Instance.SetCurrentBallIndex(gameInfo.Value.myPlayerIndex);
         ShowBall();
 
@@ -150,7 +172,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
         if (ballDataWapper.nextPLayerIndex == gameInfo.Value.myPlayerIndex)
 
         {
-        
+
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             isSet = false;
             GameManager.Instance.SetCurrentBallIndex(gameInfo.Value.myPlayerIndex);
@@ -172,6 +194,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
     public void OnTouchEndPoint()
     {
         HideBall();
+        RemoveInList();
         PhotonNetwork.Destroy(this.gameObject);
     }
 

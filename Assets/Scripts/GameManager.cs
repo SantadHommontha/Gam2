@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 gameData.Value.gameTime = gameSetting.gameTime;
                 gameData.Value.gametimer = gameSetting.gameTime;
                 gameData.Value.usetime = 0;
+                ResetGame();
                 setGame.Raise(this);
 
                 break;
@@ -235,7 +236,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             case "Play":
 
                 // Scene_Game_All_UI.Instance.timeAndSocreGroup.SetActive(true);
-               
+
 
                 gameData.Value.gamestart = true;
 
@@ -507,6 +508,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameData.Value.gamescore = 0;
 
     }
+    public void ResetButton()
+    {
+        gameData.Value.gamestart = false;
+        gameData.Value.gameTime = gameSetting.gameTime;
+        gameData.Value.gamescore = 0;
+        TeamManager.Instance.OnNewRoom();
+        RoomManager.Instance.DisconnectAndLoadScene();
+    }
     public void LeaveBTN()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -530,9 +539,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameData.Value.gameTime = gameSetting.gameTime;
         gameData.Value.gametimer = gameSetting.gameTime;
         gameData.Value.usetime = 0;
-        StartState(GameState.Wait);
-        if (PhotonNetwork.IsMasterClient)
-            photonView.RPC("RPC_ResetGame", RpcTarget.Others);
+       // StartState(GameState.Wait);
+        // if (PhotonNetwork.IsMasterClient)
+        //     photonView.RPC("RPC_ResetGame", RpcTarget.Others);
     }
     #endregion
 

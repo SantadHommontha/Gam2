@@ -38,6 +38,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Loading 1");
     }
 
+    public void DisconnectAndLoadScene()
+    {
+
+        photonView.RPC("RPC_DisConnectAndLoadScene", RpcTarget.Others);
+    }
+    [PunRPC]
+    private void RPC_DisConnectAndLoadScene()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Loading 1");
+    }
+
     public void NewRoom()
     {
         if (PhotonNetwork.InRoom)
