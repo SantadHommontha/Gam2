@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   value:
-    gamescore: 0
-    gameTime: 0
-    gametimer: 0
-    usetime: 0
+    gamescore: 3
+    gameTime: 30
+    gametimer: 19
+    usetime: 11
     gamestart: 0
     isAdmin: 0
     isPlayer: 0
-    roomCode: 
-    spacetator: 0
-    gameState: 
+    roomCode: 0
+    spacetator: 1
+    gameState: Over
   initialValue:
     gamescore: 0
     gameTime: 0

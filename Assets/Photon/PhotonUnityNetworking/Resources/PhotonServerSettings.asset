@@ -64,6 +64,7 @@ MonoBehaviour:
   - RPC_SetLevel
   - RPC_GameOver
   - RPC_ReceiveTimer
+  - RPC_DisConnectAndLoadScene
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
