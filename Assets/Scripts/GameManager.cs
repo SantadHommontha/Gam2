@@ -4,7 +4,8 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
+using System.Collections;
+
 
 
 [System.Serializable]
@@ -118,6 +119,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     private int level2_index = 0;
     private int level3_index = 0;
 
+    [Space]
+    [Tooltip("second")]
+    [SerializeField] private float timeToKeepAlive = 50;
     [Header("Test")]
     [SerializeField] private TMP_Text ui_playerIndex;
     [SerializeField] private Toggle toggle;
@@ -356,7 +360,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             else
                 StartState(GameState.SetGame);
 
-
+            StartCoroutine(KeepGA());
         }
         else
         {
@@ -742,5 +746,26 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void EnterSpaceTator()
     {
         spacetator.Raise(this);
+    }
+
+
+    //keep game alive in server
+
+    private IEnumerator KeepGA()
+    {
+        var waitForSeconds = new WaitForSeconds(timeToKeepAlive);
+        while (gameInfo.Value.isAdmin)
+        {
+            photonView.RPC("RPC_KeepGA", RpcTarget.All);
+            yield return waitForSeconds;
+        }
+        yield return null;
+      
+    }
+
+    [PunRPC]
+    private void RPC_KeepGA()
+    {
+        //do not thing
     }
 }

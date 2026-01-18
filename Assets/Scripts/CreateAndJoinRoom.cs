@@ -20,20 +20,35 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 
     [SerializeField] private StringValue adminCode;
 
+    [Space]
+    [SerializeField] private GameObject disconnectText;
+
     void Awake()
     {
         SetMeassge("");
     }
+    private void Start()
+    {
+        StartCoroutine(KeepGA());
+    }
     #region  CreateRoom
     public void CreateRoom()
     {
-        GameInfo.SetToDefualtValue(gameInfo.Value);
-        ChangeMeassge("Create Room");
-        gameInfo.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = maxPlayer;
-        gameInfo.Value.isAdmin = true;
-        PhotonNetwork.CreateRoom(gameInfo.Value.roomCode, roomOptions, TypedLobby.Default);
+        if(PhotonNetwork.InLobby)
+        {
+            GameInfo.SetToDefualtValue(gameInfo.Value);
+            ChangeMeassge("Create Room");
+            gameInfo.Value.roomCode = GenerateCode.GenerateRandomCode().ToLower();
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = maxPlayer;
+            gameInfo.Value.isAdmin = true;
+            PhotonNetwork.CreateRoom(gameInfo.Value.roomCode, roomOptions, TypedLobby.Default);
+        }
+        else
+        {
+            ChangeMeassge("Your are Disconnect Form Server");
+        }
+       
     }
     #endregion
     private void ChangeMeassge(string _text)
@@ -114,4 +129,33 @@ public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
         SetMeassge("");
     }
 
+
+
+
+    private void Update()
+    {
+        if(disconnectText)
+        {
+            disconnectText.SetActive(!PhotonNetwork.IsConnected);
+        }
+    }
+
+
+    private IEnumerator KeepGA()
+    {
+        var waitForSeconds = new WaitForSeconds(40);
+        while (gameInfo.Value.isAdmin)
+        {
+            photonView.RPC("RPC_KeepGA", PhotonNetwork.LocalPlayer);
+            yield return waitForSeconds;
+        }
+        yield return null;
+
+    }
+
+    [PunRPC]
+    private void RPC_KeepGA()
+    {
+        //do not thing
+    }
 }

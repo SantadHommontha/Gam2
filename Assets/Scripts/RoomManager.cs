@@ -9,6 +9,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private bool isWaitingToCreateRoom = false;
     private bool isWaitingToJoinLobby = false;
     //  private bool isWantcreateNewRoom = false;
+
+    [SerializeField] private GameObject textToShowWhileDisconnect;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -81,6 +83,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
         //         isWaitingToJoinLobby = false;
         //     }
         // }
+        if(textToShowWhileDisconnect)
+        {
+        textToShowWhileDisconnect.SetActive(!PhotonNetwork.IsConnected);
+        }
 
     }
     public override void OnLeftRoom()
@@ -115,8 +121,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
             isWaitingToJoinLobby = false;
             PhotonNetwork.LoadLevel("Game 1");
         }
-
-
-
     }
 }
