@@ -352,7 +352,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMessageQueueRunning)
             PhotonNetwork.IsMessageQueueRunning = true;
 
-
+        PhotonNetwork.RunRpcCoroutines = true;
+        PhotonNetwork.KeepAliveInBackground = 1000f;
+        PhotonNetwork.NetworkingClient.LoadBalancingPeer.DisconnectTimeout = 600000;
         if (gameInfo.Value.isAdmin)
         {
             if (gameInfo.Value.isPlayer)
@@ -543,7 +545,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameData.Value.gameTime = gameSetting.gameTime;
         gameData.Value.gametimer = gameSetting.gameTime;
         gameData.Value.usetime = 0;
-       // StartState(GameState.Wait);
+        // StartState(GameState.Wait);
         // if (PhotonNetwork.IsMasterClient)
         //     photonView.RPC("RPC_ResetGame", RpcTarget.Others);
     }
@@ -753,19 +755,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator KeepGA()
     {
-        var waitForSeconds = new WaitForSeconds(timeToKeepAlive);
-        while (gameInfo.Value.isAdmin)
+        while (PhotonNetwork.IsConnected && gameInfo.Value.isAdmin)
         {
-            photonView.RPC("RPC_KeepGA", RpcTarget.All);
-            yield return waitForSeconds;
+
+            PhotonNetwork.SendAllOutgoingCommands();
+            yield return new WaitForSeconds(5f);
         }
-        yield return null;
-      
+
     }
 
-    [PunRPC]
-    private void RPC_KeepGA()
-    {
-        //do not thing
-    }
+
 }

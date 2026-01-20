@@ -72,7 +72,7 @@ public class BallHandle : MonoBehaviour, IPunInstantiateMagicCallback, IPunObser
             if (!isSet)
             {
                 ball.canTrigger = true;
-                float yPos = ballDataWapper.up ? -4.3f : 6.7f;
+                float yPos = ballDataWapper.up ? -4.3f : 6.5f;
                 ball.transform.position = new Vector3(ballDataWapper.xPosition, yPos, 0);
                 ball.rb.linearVelocity = new Vector2(ballDataWapper.xVelocity, ballDataWapper.yVelocity);
 
